@@ -1,10 +1,11 @@
 #include <common.h>
 #include <sys/time.h>
 #include <signal.h>
-
+#include <bits/sigaction.h>
 #define TIMER_HZ 60
 #define MAX_HANDLER 8
 
+int sigaction( int signum, const struct sigaction *act, struct sigaction *oldact );
 typedef void (*alarm_handler_t) ();
 static alarm_handler_t handler[MAX_HANDLER] = {};
 static int idx = 0;
