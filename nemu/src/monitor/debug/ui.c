@@ -48,7 +48,22 @@ static int cmd_si( char *args ) {
 	return 0;		
 }
 
+static int cmd_info( char *args ) {
 
+	char *arg = strtok( NULL, " " );
+	if( arg == NULL )
+		printf("agument default\n");
+	else {
+	
+		if( strcmp( arg, "r") == 0 )
+			isa_reg_display();
+		else 
+		
+			printf("Unkown command: %s\n", arg);
+	}
+	
+	return 0;
+}  
 static int cmd_q(char *args) {
   return -1;
 }
@@ -63,7 +78,8 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si", "step to instructs", cmd_si ,}
+  { "si", "step to instructs", cmd_si },
+  { "info", "printf reg", cmd_info }
  
   /* TODO: Add more commands */
 
