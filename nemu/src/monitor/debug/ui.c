@@ -94,9 +94,9 @@ static int cmd_x( char *args ) {
 			sscanf( dummy, "%x", &addr );
 			for( int i=0; i<nums; i++ )
 				if( i == nums-1 )
-					printf("%02x\n", paddr_read( addr, 1 ) );
+					printf("%02x\n", paddr_read( addr+i, 1 ) );
 				else
-					printf("%02x ",   paddr_read( addr, 1) );
+					printf("%02x ",   paddr_read( addr+i, 1) );
 		}
 		
 	}
