@@ -73,17 +73,21 @@ static int cmd_x( char *args ) {
 	if( !args ) {
 	
 		printf("agument default\n");
+		return 0;
 	} else {
 		
 		int nums = 0;
 		sscanf( args ,"%d", &nums );
-		if( nums == 0 )
-			printf("error: 0 isn't agument\n");
-
+		if( nums == 0 ) {
+			printf("error: 6 isn't agument\n");
+			return 0;
+		}
 		char *dummy = strtok( NULL, " " );
 		
-		if( !dummy )
+		if( !dummy ) {
 			printf("agument default\n");
+			return 0;
+		}
 		else {
 			extern word_t paddr_read( paddr_t, int );
 			unsigned int addr = 0;
