@@ -67,7 +67,39 @@ static int cmd_info( char *args ) {
 static int cmd_q(char *args) {
   return -1;
 }
+ 
+static int cmd_x( char *args ) {
 
+	char *arg = strtok( NULL, " " );
+	if( !arg ) {
+	
+		printf("agument default\n");
+	} else {
+		
+		int nums = 0;
+		sscanf( arg ,"%d", &nums );
+		if( nums == 0 )
+			printf("error: 0 isn't agument\n");
+
+		char *dummy = strtok( arg, " " );
+		
+		if( !dummy )
+			printf("agument default\n");
+		else {
+			extern word_t paddr_read( paddr_t, int );
+			unsigned int addr = 0;
+			sscanf( dummy, "%x", &addr );
+			for( int i=0; i<nums; i++ )
+				if( i == nums-1 )
+					printf("%02x\n", paddr_read( addr, 1 ) );
+				else
+					printf("%02x ",   paddr_read( addr, 1) );
+		}
+		
+	}
+
+	return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -79,8 +111,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "step to instructs", cmd_si },
-  { "info", "printf reg", cmd_info }
- 
+  { "info", "printf reg", cmd_info },
+  { "x", "printf to mem", cmd_x } 
   /* TODO: Add more commands */
 
 };
