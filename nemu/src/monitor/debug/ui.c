@@ -77,7 +77,7 @@ static int cmd_x( char *args ) {
 	} else {
 		
 		int nums = 0;
-		sscanf( args ,"%d", &nums );
+		nums = atoi( strtok( NULL, " ") );
 		if( nums == 0 ) {
 			printf("error: 6 isn't agument\n");
 			return 0;
