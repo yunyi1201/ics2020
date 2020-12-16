@@ -70,18 +70,17 @@ static int cmd_q(char *args) {
  
 static int cmd_x( char *args ) {
 
-	char *arg = strtok( NULL, " " );
-	if( !arg ) {
+	if( !args ) {
 	
 		printf("agument default\n");
 	} else {
 		
 		int nums = 0;
-		sscanf( arg ,"%d", &nums );
+		sscanf( args ,"%d", &nums );
 		if( nums == 0 )
 			printf("error: 0 isn't agument\n");
 
-		char *dummy = strtok( arg, " " );
+		char *dummy = strtok( NULL, " " );
 		
 		if( !dummy )
 			printf("agument default\n");
