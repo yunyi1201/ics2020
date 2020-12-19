@@ -29,7 +29,7 @@ static struct rule {
   {"\\*",  '*'},		//mul
   {"\\(",   '(' }, 
   {"\\)",   ')' },
-  {"[0-9]", TK_NUM}
+  {"[[:digit:]]", TK_NUM}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[14]) )
