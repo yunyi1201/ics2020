@@ -1,5 +1,5 @@
 #include <isa.h>
-
+#include <assert.h>
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
@@ -61,6 +61,15 @@ typedef struct token {
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
+static void my_strcpy( char des[], const char *src, int len ) {
+	
+	assert( len <= 32 );
+	for( int i=0; i<len; i++ ) {
+		des[i] = *(src+i);
+	}
+
+	des[len] = '\0';
+}
 static bool make_token(char *e) {
   int position = 0;
   int i;
@@ -92,7 +101,9 @@ static bool make_token(char *e) {
 	  case '/' : tokens[nr_token++].type = '/'; break;
 	  case '(' : tokens[nr_token++].type = '('; break;
 	  case ')' : tokens[nr_token++].type = ')'; break; 
-	  case TK_EQ:tokens[nr_token++].type =  TK_EQ; break;
+	  case TK_EQ :tokens[nr_token++].type =  TK_EQ; break;
+	  case TK_NUM :tokens[nr_token].type = TK_NUM, my_strcpy( tokens[nr_token++].str, substr_start, substr_len ); break;
+
           default: TODO();
         }
 
