@@ -6,7 +6,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_NEG, TK_DEREF
 
   /* TODO: Add more token types */
 
@@ -141,9 +141,10 @@ static int pir( int type ) {
 	switch( type ) {
 		case '+':
 		case '-':  return 0;
+		case TK_NEG: return 1;
 		case '*':
-		case '/':  return 1;
-		default : printf("Invalid op"); return -1;				
+		case '/':  return 2;
+		default : printf("Invalid op"); assert(0);				
 	}
 	return 0;
 }
@@ -189,7 +190,14 @@ static int eval( int p, int q , bool *invalid ) {
 				
 			return eval( p+1, q-1, invalid);	
 		else {
+				
+			
 			int op = dominant_operator( p, q );
+			if( tokens[op].type == TK_NEG ) {
+				int val = eval( op+1, q, invalid );
+				return ~val;
+			}
+				
 			int val1 = eval( p, op-1, invalid);
 			int val2 = eval( op+1, q, invalid);
 			switch( tokens[op].type ) {
@@ -197,13 +205,17 @@ static int eval( int p, int q , bool *invalid ) {
 				case '+' :  return val1 + val2;
 				case '-' :  return val1 - val2;
 				case '*' :  return val1 * val2;
-				case '/' :  return val1 / val2;
+				case '/' :  return val1 / val2;				 
 				default  :  assert(0);	
 			}
 	
 		}
 	}
 	return 0;
+}
+static bool is_unary_op( int i ) {
+
+	return  tokens[i].type != TK_NUM;
 }
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -212,7 +224,13 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-    	
+   for( int i=0; i<nr_token; i++ ) {	
+	if( i == 0 || is_unary_op( i-1 ) ) {
+		if( tokens[i].type == '-' )
+			tokens[i].type = TK_NEG;
+		//add more op
+	}			
+  }
    bool invalid = true;
    int res = eval( 0, nr_token-1, &invalid );		
    if( invalid  ) 
