@@ -103,7 +103,7 @@ static int cmd_x( char *args ) {
 
 	return 0;
 }
-static int cmd_p ( char *args ) {
+static int  cmd_p ( char *args ) {
 	if( args == NULL ) {
 		printf("too few agument\n");
 		return 0;
