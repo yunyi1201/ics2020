@@ -29,7 +29,7 @@ static struct rule {
   {"\\*",  '*'},		//mul
   {"\\(",   '(' }, 
   {"\\)",   ')' },
-  {"[[:digit:]]", TK_NUM}
+  {"[[:digit:]]+", TK_NUM}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[14]) )
@@ -104,6 +104,7 @@ static bool make_token(char *e) {
 	  case ')' : tokens[nr_token++].type = ')'; break; 
 	  case TK_EQ :tokens[nr_token++].type =  TK_EQ; break;
 	  case TK_NUM :tokens[nr_token].type = TK_NUM, my_strcpy( tokens[nr_token++].str, substr_start, substr_len ); break;
+
 
           default: assert(0);
         }
