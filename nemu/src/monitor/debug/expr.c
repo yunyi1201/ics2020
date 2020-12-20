@@ -30,8 +30,8 @@ static struct rule {
   {"\\*",  '*'},		//mul
   {"\\(",   '(' }, 
   {"\\)",   ')' },
-  {"[[:digit:]]+", TK_NUM },
   {"0x[0-9a-fA-F]+", TK_HEX},
+  {"[[:digit:]]+", TK_NUM },
   {"([\\$rsgt]([0-9ap])+)|(pc)", TK_REG  }
 };
 
