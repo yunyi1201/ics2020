@@ -104,7 +104,7 @@ static bool make_token(char *e) {
 	  case TK_EQ :tokens[nr_token++].type =  TK_EQ; break;
 	  case TK_NUM :tokens[nr_token].type = TK_NUM, my_strcpy( tokens[nr_token++].str, substr_start, substr_len ); break;
 
-          default: TODO();
+          default: assert(0);
         }
 
         break;
@@ -120,7 +120,90 @@ static bool make_token(char *e) {
   return true;
 }
 
+static bool check_parentheses( int p, int q ) {
 
+	int i, tag = 0;
+	if( tokens[p].type != '(' || tokens[q].type != ')')
+		return false;
+	for( i=p; i<=q; i++ ) {
+		if( tokens[i].type == '(' )
+			tag++;
+		else if( tokens[i].type == ')' )
+			--tag; 	
+		if( tag == 0 && i<q )
+			return false;	
+	}
+	return tag == 0;
+}
+static int pir( int type ) {
+
+	switch( type ) {
+		case '+':
+		case '-':  return 0;
+		case '*':
+		case '/':  return 1;
+		default : printf("Invalid op"); return -1;				
+	}
+	return 0;
+}
+static int dominant_operator( int p, int q ) {
+
+	int i, dom = p, left_n = 0;
+	int pr = 100;
+	for( i=p; i<=q; i++ ) { 
+		if( tokens[i].type == '(' ) {
+			left_n += 1;
+			while( i <= q ) { 
+				i++;
+				if( tokens[i].type == '(' )
+					left_n++;
+				else if( tokens[i].type == ')' )
+					left_n--;
+				if( !left_n ) 
+					break; 
+		} 
+		if( i >  q )
+			break;
+		} else if( tokens[i].type == TK_NUM )
+			continue;
+		else if( pir( tokens[i].type ) <= pr )  {
+			pr = pir(tokens[i].type);
+			dom = i;
+		}
+	}
+	return dom;
+}
+static int eval( int p, int q , bool *invalid ) {
+
+	int num;
+	if( p > q ) {
+		*invalid = false;
+		return 0;
+	} else if( p== q ) {
+		sscanf( tokens[p].str, "%d", &num );
+		return num;
+	}	
+	else {
+		if(check_parentheses( p, q ))
+				
+			return eval( p+1, q-1, invalid);	
+		else {
+			int op = dominant_operator( p, q );
+			int val1 = eval( p, op-1, invalid);
+			int val2 = eval( op+1, q, invalid);
+			switch( tokens[op].type ) {
+
+				case '+' :  return val1 + val2;
+				case '-' :  return val1 - val2;
+				case '*' :  return val1 * val2;
+				case '/' :  return val1 / val2;
+				default  :  assert(0);	
+			}
+	
+		}
+	}
+	return 0;
+}
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -128,7 +211,13 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
-
+    	
+   bool invalid = true;
+   int res = eval( 0, nr_token-1, &invalid );		
+   if( invalid  ) 
+	return (word_t)res;
+   else 
+	success = false;
+				 	 
   return 0;
 }
