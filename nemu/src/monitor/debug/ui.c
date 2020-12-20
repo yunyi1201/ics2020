@@ -103,6 +103,21 @@ static int cmd_x( char *args ) {
 
 	return 0;
 }
+static int cmd_p ( char *args ) {
+	if( args == NULL ) {
+		printf("too few agument\n");
+		return 0;
+	}
+	bool success = true;
+	word_t res;
+	res = expr( args, &success );
+	if( success )
+		printf("%d\n",res);
+	else 
+		printf("faild\n");
+	return 0;
+
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -115,7 +130,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "step to instructs", cmd_si },
   { "info", "printf reg", cmd_info },
-  { "x", "printf to mem", cmd_x } 
+  { "x", "printf to mem", cmd_x },
+  { "p", "printf expr", cmd_p} 
   /* TODO: Add more commands */
 
 };
