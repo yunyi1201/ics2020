@@ -165,7 +165,7 @@ static int dominant_operator( int p, int q ) {
 		} 
 		if( i >  q )
 			break;
-		} else if( tokens[i].type == TK_NUM )
+		} else if( tokens[i].type == TK_NUM || tokens[i].type == TK_HEX || tokens[i].type == TK_REG )
 			continue;
 		else if( pir( tokens[i].type ) <= pr )  {
 			pr = pir(tokens[i].type);
