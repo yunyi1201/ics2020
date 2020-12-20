@@ -195,7 +195,7 @@ static int eval( int p, int q , bool *invalid ) {
 			int op = dominant_operator( p, q );
 			if( tokens[op].type == TK_NEG ) {
 				int val = eval( op+1, q, invalid );
-				return ~val;
+				return -val;
 			}
 				
 			int val1 = eval( p, op-1, invalid);
