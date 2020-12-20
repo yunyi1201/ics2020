@@ -112,7 +112,7 @@ static int  cmd_p ( char *args ) {
 	word_t res;
 	res = expr( args, &success );
 	if( success )
-		printf("%d\n",res);
+		printf("%u\n",res);
 	else 
 		printf("faild\n");
 	return 0;
