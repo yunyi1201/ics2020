@@ -3,6 +3,7 @@
 #include <monitor/difftest.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include "debug/watchpoint.h"
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -92,7 +93,7 @@ void cpu_exec(uint64_t n) {
     WP* tmp = scan_wp();
 
     if( tmp ) {
-	    printf("watchoint %d new_value %d\n",tmp->NO, tmp->new_value);
+	    printf("watchpoint %d new_value %d\n",tmp->NO, tmp->new_value);
 	   nemu_state.state = NEMU_STOP; 	
 	}
 #endif
