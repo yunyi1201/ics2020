@@ -134,6 +134,33 @@ static int cmd_w( char *args ) {
  	return 0;	
 
 }
+static int cmd_d( char *args ) {
+
+	if( args == NULL ) { 
+		while(1) {
+		printf("you want to delete all watchpoints?, Please y ? n\n");
+		char c;
+		scanf( "%c", &c );
+		switch( c ) {
+			case 'y': de_all(); return 0; 
+			case 'n': return 0;
+			default : printf("Please input y ? n\n"); 
+
+			}
+	   	}
+
+	}
+	int NO;
+	if( sscanf( args ,"%d", &NO ) == 1 ) {
+	       	if( de_wp( NO ) )
+			printf("watchpoint%d successly\n",NO);
+		return 0;	
+		
+	}
+	printf("agument:%serror\n",args);
+	return 0;	
+
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -148,7 +175,8 @@ static struct {
   { "info", "printf reg", cmd_info },
   { "x", "printf to mem", cmd_x },
   { "p", "printf expr", cmd_p}, 
-  { "w", "set watchpoint", cmd_w}
+  { "w", "set watchpoint", cmd_w},
+  { "d", "delete watchpoint", cmd_d }
   /* TODO: Add more commands */
 
 };
