@@ -57,7 +57,9 @@ static int cmd_info( char *args ) {
 	
 		if( strcmp( arg, "r") == 0 )
 			isa_reg_display();
-		else 
+		else if( strcmp( arg, "w" ) == 0 ) {
+			display_wp();	
+		} else 	
 		
 			printf("Unkown command: %s\n", arg);
 	}
@@ -112,10 +114,24 @@ static int  cmd_p ( char *args ) {
 	word_t res;
 	res = expr( args, &success );
 	if( success )
-		printf("%u\n",res);
+		printf("Dec:%u, Hex: %08x\n",res, res );
 	else 
 		printf("faild\n");
 	return 0;
+
+}
+
+static int cmd_w( char *args ) {
+
+	if( !args ) { 
+		printf("Please input agument\n");
+		return 0;
+	} 
+	int NO;
+	NO = set_wp( args );
+	if( NO != -1 )
+		printf("watchpoint%d:%s\n", NO, args );
+ 	return 0;	
 
 }
 static int cmd_help(char *args);
@@ -131,7 +147,8 @@ static struct {
   { "si", "step to instructs", cmd_si },
   { "info", "printf reg", cmd_info },
   { "x", "printf to mem", cmd_x },
-  { "p", "printf expr", cmd_p} 
+  { "p", "printf expr", cmd_p}, 
+  { "w", "set watchpoint", cmd_w}
   /* TODO: Add more commands */
 
 };

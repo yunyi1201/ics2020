@@ -187,13 +187,13 @@ static word_t eval( int p, int q , bool *invalid ) {
 		} else if( tokens[p].type == TK_HEX ) {
 			sscanf( tokens[p].str, "%x", &num );
 			return num;	
-		} else {
+		} else if( tokens[p].type == TK_REG ) {
 			bool success = true;		
 			num = isa_reg_str2val( tokens[p].str, &success);
 			if( success )
 				return num;
 			else {
-				printf("no value\n");
+				printf("no match reg\n");
 				return 0;
 			}			 
 		}
@@ -223,7 +223,7 @@ static word_t eval( int p, int q , bool *invalid ) {
 				case '+' :  return val1 + val2;
 				case '-' :  return val1 - val2;
 				case '*' :  return val1 * val2;
-				case '/' :  return val1 / val2;				 
+				case '/' :  if( val2 == 0 ) { printf("div 0 error\n"); assert(0); } return val1 / val2;		
 				default  :  assert(0);	
 			}
 	
@@ -233,7 +233,7 @@ static word_t eval( int p, int q , bool *invalid ) {
 }
 static bool is_unary_op( int i ) {
 
-	return  tokens[i].type != TK_NUM && tokens[i].type != TK_HEX && tokens[i].type != '(' ;
+	return  tokens[i].type != TK_NUM && tokens[i].type != TK_HEX && tokens[i].type != ')' ;
 }
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -252,9 +252,9 @@ word_t expr(char *e, bool *success) {
 	}			
   }
    bool invalid = true;
-   int res = eval( 0, nr_token-1, &invalid );		
+   word_t res = eval( 0, nr_token-1, &invalid );		
    if( invalid  ) 
-	return (word_t)res;
+	return res;
    else 
 	success = false;
 				 	 
