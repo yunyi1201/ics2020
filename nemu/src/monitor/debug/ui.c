@@ -130,7 +130,7 @@ static int cmd_w( char *args ) {
 	int NO;
 	NO = set_wp( args );
 	if( NO != -1 )
-		printf("watchpoint%d:%s\n", NO, args );
+		printf("watchpoint %d:%s\n", NO, args );
  	return 0;	
 
 }
@@ -153,7 +153,7 @@ static int cmd_d( char *args ) {
 	int NO;
 	if( sscanf( args ,"%d", &NO ) == 1 ) {
 	       	if( de_wp( NO ) )
-			printf("watchpoint%d successly\n",NO);
+			printf("watchpoint %d:successly\n",NO);
 		return 0;	
 		
 	}

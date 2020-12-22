@@ -7,7 +7,7 @@
 
 CPU_state cpu;
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_NEG, TK_DEREF, TK_REG, TK_HEX
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_NEG, TK_DEREF, TK_REG, TK_HEX, TK_NEQ 
 
   /* TODO: Add more token types */
 
@@ -21,7 +21,7 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
+  {"!=", TK_NEQ},
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
@@ -137,12 +137,14 @@ static bool check_parentheses( int p, int q ) {
 static int pir( int type ) {
 
 	switch( type ) {
+		case TK_EQ :
+		case TK_NEQ: return 0;
 		case '+':
-		case '-':  return 0;
-		case TK_NEG: return 1;
+		case '-':  return 1;
+		case TK_NEG: return 2;
 		case '*':
-		case '/':  return 2;
-		case TK_DEREF : return 3;
+		case '/':  return 3;
+		case TK_DEREF : return 4;
 		default : printf("Invalid op"); assert(0);				
 	}
 	return 0;
@@ -219,7 +221,8 @@ static word_t eval( int p, int q , bool *invalid ) {
 			int val1 = eval( p, op-1, invalid);
 			int val2 = eval( op+1, q, invalid);
 			switch( tokens[op].type ) {
-
+				case TK_EQ: return val1 == val2;
+				case TK_NEQ: return val1 != val2;
 				case '+' :  return val1 + val2;
 				case '-' :  return val1 - val2;
 				case '*' :  return val1 * val2;
