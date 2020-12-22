@@ -11,6 +11,7 @@ void init_wp_pool() {
   int i;
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
+    wp_pool[i].used = false;
     wp_pool[i].next = &wp_pool[i + 1];
   }
   wp_pool[NR_WP - 1].next = NULL;
@@ -23,8 +24,10 @@ void init_wp_pool() {
 static WP* new_wp() {
 	assert( free_ != NULL );
 	WP *p = free_;
+	assert( p->used == false );
 	free_ = p->next;
 	p->next = head;
+	p->used = true;
 	head = p;
 	return p;
 
@@ -33,7 +36,7 @@ static WP* new_wp() {
 static void free_wp( WP* wp ) {
 	
 	assert( head != NULL );
-		
+	wp->used = false;	
 	wp->next = free_;
 	free_ = wp;
 }
@@ -43,16 +46,15 @@ int set_wp( char *args ) {
 	bool success = true;
 	word_t res = expr( args, &success );
 	WP *p;	
-	if( success ) {
-		
+	if( success ) {	
 		p = new_wp();		
+		p->used = true;
 		p->old_value = res;	
 		p->new_value = res;
 		p->expr = (char *)malloc((strlen(args)+1)*sizeof(char));
 	 	strcpy( p->expr, args );	
 	} else {
 		
-		printf("set_wp faild: %s\n", args );
 		return -1;
 	}
 	return p->NO;
@@ -66,12 +68,11 @@ bool de_wp( int NO ) {
 	for( pre=dummy, tmp=head; tmp && tmp->NO != NO; tmp=tmp->next, pre = pre->next );
 	if( tmp ) {
 		pre->next = tmp->next;
-		free_wp(tmp);
 		free(tmp->expr);
+		free_wp( tmp );
 		head = dummy->next;
 	}
 	else { 
-		printf("don't find NO: %d\n", NO);
 		free(dummy);
 		return false;
 	}
@@ -90,18 +91,19 @@ void display_wp( ) {
 	}
 	
 }
-bool de_all( void ) {
+void de_all( void ) {
 
-	if( !head ) {
-		printf("no watchpoint\n");
-		return false;
+	if( !head || head->used == false ) {
+		return ;
 	}
-	for( WP *tmp=head; tmp != NULL; tmp=tmp->next ) {
-			
-		de_wp( tmp->NO );			
-		
+	for( WP* tmp=head; tmp && tmp->used; tmp=tmp->next ) {
+		free_wp( tmp );
+
+
 	}
-	return true; 
+	head = NULL;
+	return ;	
+				
 }
 
 WP* scan_wp( ) {

@@ -131,6 +131,8 @@ static int cmd_w( char *args ) {
 	NO = set_wp( args );
 	if( NO != -1 )
 		printf("watchpoint %d:%s\n", NO, args );
+	else 
+		printf("set watchpoint faild\n");
  	return 0;	
 
 }
