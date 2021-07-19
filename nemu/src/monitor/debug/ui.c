@@ -69,8 +69,8 @@ static int cmd_x(char *args) {
 		return -1;
 	}
 	for(int i=0; i<n; i++){
-		addr += (i*4);
 		printf("0x%x: 0x%08x\n", addr, vaddr_read(addr, 4));
+		addr += 4;
 	}
 	return 0;
 }
