@@ -76,7 +76,19 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_p(char *args){
-	TODO();
+	if(args == NULL){
+		printf("cmd_p need expression\n");
+		return -1;
+	}
+	bool success = true;
+	word_t ans = expr(args, &success);
+	if(success){
+		printf("DEC: %u, HEX: %08x\n", ans, ans);
+		return 0;
+	}else{
+		printf("expr: faliure\n");
+		return -1;
+	}
 }
 
 static int cmd_w(char *args){
@@ -86,6 +98,7 @@ static int cmd_w(char *args){
 static int cmd_d(char *args){
 	TODO();
 }
+
 static int cmd_help(char *args);
 
 static struct {
