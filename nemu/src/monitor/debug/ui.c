@@ -103,7 +103,9 @@ static int cmd_w(char *args){
 	word_t ans = expr(args, &success);
 	if(success){
 		WP* wp = new_wp();
-		wp->expr = args;
+		char *expression = (char*)malloc(sizeof(char)*32);
+		strcpy(expression, args);
+		wp->expr = expression;
 		wp->old_val = ans;
 		printf("watchpoint %d: %s\n", wp->NO, wp->expr);
 	}else  {

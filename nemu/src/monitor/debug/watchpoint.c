@@ -1,5 +1,6 @@
 #include "watchpoint.h"
 #include "expr.h"
+#include <stdlib.h>
 
 #define NR_WP 32
 
@@ -53,6 +54,7 @@ void free_wp(WP *wp) {
 	else {
 		prev->next = cur->next;
 	}
+	free(wp->expr);
 	wp->used = false;
 	wp->next = free_;
 	free_ = wp;
