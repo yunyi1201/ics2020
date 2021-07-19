@@ -6,7 +6,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_NEG, TK_DEREF, TK_REG, TK_NEQ, TK_HEX 
 
   /* TODO: Add more token types */
 
@@ -24,6 +24,15 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+	{"[[:digit:]]+", TK_NUM},
+	{"-",  '-'},
+	{"\\+", '+' },
+	{"\\*", '*' },
+	{"/"  , '/' },
+	{"\\(", '(' },
+	{"\\)", ')' },
+	{"0x[0-9a-fA-F]", TK_HEX },
+	{"([\\$rsgt]([0-9ap])+)|(pc)", TK_REG},
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -55,6 +64,17 @@ typedef struct token {
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
+
+static void my_strcpy( char des[], const char *src, int len ) {
+	
+	assert( len <= 32 );
+	for( int i=0; i<len; i++ ) {
+		des[i] = *(src+i);
+	}
+
+	des[len] = '\0';
+}
+
 static bool make_token(char *e) {
   int position = 0;
   int i;
@@ -80,7 +100,11 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+					case TK_NOTYPE:  break;
+					case TK_HEX   :   
+					case TK_REG   :  
+					case TK_NUM   : my_strcpy(tokens[nr_token].str, substr_start, substr_len); 
+          default:  tokens[nr_token++].type = rules[i].token_type;
         }
 
         break;
@@ -96,6 +120,125 @@ static bool make_token(char *e) {
   return true;
 }
 
+static bool check_parentheses( int p, int q ) {
+
+	int i, tag = 0;
+	if( tokens[p].type != '(' || tokens[q].type != ')')
+		return false;
+	for( i=p; i<=q; i++ ) {
+		if( tokens[i].type == '(' )
+			tag++;
+		else if( tokens[i].type == ')' )
+			--tag; 	
+		if( tag == 0 && i<q )
+			return false;	
+	}
+	return tag == 0;
+}
+static int pir( int type ) {
+
+	switch( type ) {
+		case TK_EQ :
+		case TK_NEQ: return 0;
+		case '+':
+		case '-':  return 1;
+		case TK_NEG: return 2;
+		case '*':
+		case '/':  return 3;
+		case TK_DEREF : return 4;
+		default : printf("Invalid op"); assert(0);				
+	}
+	return 0;
+}
+static int dominant_operator( int p, int q ) {
+
+	int i, dom = p, left_n = 0;
+	int pr = 100;
+	for( i=p; i<=q; i++ ) { 
+		if( tokens[i].type == '(' ) {
+			left_n += 1;
+			while( i <= q ) { 
+				i++;
+				if( tokens[i].type == '(' )
+					left_n++;
+				else if( tokens[i].type == ')' )
+					left_n--;
+				if( !left_n ) 
+					break; 
+		} 
+		if( i >  q )
+			break;
+		} else if( tokens[i].type == TK_NUM || tokens[i].type == TK_HEX || tokens[i].type == TK_REG )
+			continue;
+		else if( pir( tokens[i].type ) <= pr )  {
+			pr = pir(tokens[i].type);
+			dom = i;
+		}
+	}
+	return dom;
+}
+static word_t eval( int p, int q , bool *invalid ) {
+
+	word_t  num;
+	if( p > q ) {
+		*invalid = false;
+		return 0;
+	} else if( p== q ) { 
+		if( tokens[p].type == TK_NUM ) {
+			sscanf( tokens[p].str, "%d", &num );
+			return num;
+		} else if( tokens[p].type == TK_HEX ) {
+			sscanf( tokens[p].str, "%x", &num );
+			return num;	
+		} else if( tokens[p].type == TK_REG ) {
+			bool success = true;		
+			num = isa_reg_str2val( tokens[p].str, &success);
+			if( success )
+				return num;
+			else {
+				printf("no match reg\n");
+				return 0;
+			}			 
+		}
+	}	
+	else {
+		if(check_parentheses( p, q ))
+				
+			return eval( p+1, q-1, invalid);	
+		else {
+				
+			
+			int op = dominant_operator( p, q );
+			if( tokens[op].type == TK_NEG ) {
+				int val = eval( op+1, q, invalid );
+				return -val;
+			} 
+			if( tokens[op].type == TK_DEREF ) {
+				extern word_t paddr_read( paddr_t, int );	
+				int val = eval( op+1, q ,invalid );
+				return paddr_read( val, 4 );
+			}	
+				
+			int val1 = eval( p, op-1, invalid);
+			int val2 = eval( op+1, q, invalid);
+			switch( tokens[op].type ) {
+				case TK_EQ: return val1 == val2;
+				case TK_NEQ: return val1 != val2;
+				case '+' :  return val1 + val2;
+				case '-' :  return val1 - val2;
+				case '*' :  return val1 * val2;
+				case '/' :  if( val2 == 0 ) { printf("div 0 error\n"); assert(0); } return val1 / val2;		
+				default  :  assert(0);	
+			}
+	
+		}
+	}
+	return 0;
+}
+static bool is_unary_op( int i ) {
+
+	return  tokens[i].type != TK_NUM && tokens[i].type != TK_HEX && tokens[i].type != ')' ;
+}
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -104,7 +247,23 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
 
+	
+  /* TODO: Insert codes to evaluate the expression. */
+	for( int i=0; i<nr_token; i++ ) {	
+		if( i == 0 || is_unary_op( i-1 ) ) {
+			if( tokens[i].type == '-' )
+				tokens[i].type = TK_NEG;
+		 //add more op
+		 	if( tokens[i].type == '*' )
+				tokens[i].type = TK_DEREF;
+		}			
+  }
+	bool invalid = true;
+  word_t res = eval( 0, nr_token-1, &invalid );		
+  if( invalid  ) 
+		return res;
+  else 
+		success = false;
   return 0;
 }
