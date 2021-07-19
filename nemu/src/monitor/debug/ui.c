@@ -57,8 +57,10 @@ static int cmd_info(char *args) {
 	if(strcmp(args, "r") == 0) {
 		isa_reg_display();			
 		return 0;
-	}
-	else {
+	}else if(strcmp(args, "w") == 0) {
+		display_wp();	
+		return 0;
+	}else {
 		printf("Unknown arg\n");	
 		return 0;
 	}
@@ -93,11 +95,29 @@ static int cmd_p(char *args){
 }
 
 static int cmd_w(char *args){
-	TODO();
+	if(args == NULL){
+		printf("cmd_w need expression\n");
+		return 0;
+	}
+	bool success = true;
+	word_t ans = expr(args, &success);
+	if(success){
+		WP* wp = new_wp();
+		wp->expr = args;
+		wp->old_val = ans;
+		printf("watchpoint: %d: %s\n", wp->NO, wp->expr);
+	}else  {
+		printf("expression invalid\n");
+	}
+	return 0;
 }
 
 static int cmd_d(char *args){
-	TODO();
+	if(args != NULL){
+		printf("error: arguments\n");
+	}else 
+		delete_wp();
+	return 0;
 }
 
 static int cmd_help(char *args);
