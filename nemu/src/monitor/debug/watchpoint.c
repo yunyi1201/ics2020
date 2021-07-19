@@ -26,12 +26,8 @@ WP* new_wp() {
 	assert(new->used == false);
 	new->used = true;
 	free_   = free_->next;
-	if(head == NULL)
-		head = new;
-	else {
-		new->next = head;
-		head = new;
-	}
+	new->next = head;
+	head = new;
 	return new;
 }
 
@@ -39,6 +35,24 @@ WP* new_wp() {
 void free_wp(WP *wp) {
 	assert(wp != NULL);
 	assert(wp->used != false);
+	int NO = wp->NO;
+	WP* cur, *prev;
+	cur = prev = head;
+	int flag = 1;
+	for( ; cur; cur = cur->next) {
+		if(cur->NO == NO)
+			break;
+		if(flag){
+			flag = 0;
+		}
+		else 
+			prev = prev->next;
+	}
+	if(cur == head)
+		head = head->next;
+	else {
+		prev->next = cur->next;
+	}
 	wp->used = false;
 	wp->next = free_;
 	free_ = wp;

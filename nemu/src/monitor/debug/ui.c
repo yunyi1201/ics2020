@@ -105,7 +105,7 @@ static int cmd_w(char *args){
 		WP* wp = new_wp();
 		wp->expr = args;
 		wp->old_val = ans;
-		printf("watchpoint: %d: %s\n", wp->NO, wp->expr);
+		printf("watchpoint %d: %s\n", wp->NO, wp->expr);
 	}else  {
 		printf("expression invalid\n");
 	}
