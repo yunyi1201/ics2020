@@ -44,8 +44,10 @@ static int cmd_si(char *args) {
 		return 0;
 	}
 	int n = atoi(args);
-	if(n == 0)
-		return -1;
+	if(n == 0){
+		printf("string invalid\n");
+		return 0;
+	}
 	for( ; n > 0; --n) 
 		isa_exec_once();
 	return 0;
@@ -58,7 +60,7 @@ static int cmd_info(char *args) {
 	}
 	else {
 		printf("Unknown arg\n");	
-		return -1;
+		return 0;
 	}
 }
 
@@ -66,7 +68,7 @@ static int cmd_x(char *args) {
 	int n, addr;
 	if(sscanf(args, "%d %x", &n, &addr) != 2) {
 		printf("err too few arguments\n");
-		return -1;
+		return 0;
 	}
 	for(int i=0; i<n; i++){
 		printf("0x%x: 0x%08x\n", addr, vaddr_read(addr, 4));
@@ -84,11 +86,10 @@ static int cmd_p(char *args){
 	word_t ans = expr(args, &success);
 	if(success){
 		printf("DEC: %u, HEX: 0x%08x\n", ans, ans);
-		return 0;
 	}else{
 		printf("expr: faliure\n");
-		return -1;
 	}
+	return 0;
 }
 
 static int cmd_w(char *args){
