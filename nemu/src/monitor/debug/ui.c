@@ -1,6 +1,7 @@
 #include <isa.h>
 #include "expr.h"
 #include "watchpoint.h"
+#include "../../../include/memory/vaddr.h"
 
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -37,6 +38,54 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) {
+	if(args == NULL){
+		isa_exec_once();
+		return 0;
+	}
+	int n = atoi(args);
+	if(n == 0)
+		return -1;
+	for( ; n > 0; --n) 
+		isa_exec_once();
+	return 0;
+}
+
+static int cmd_info(char *args) {
+	if(strcmp(args, "r") == 0) {
+		isa_reg_display();			
+		return 0;
+	}
+	else {
+		printf("Unknown arg\n");	
+		return -1;
+	}
+}
+
+static int cmd_x(char *args) {
+	int n, addr;
+	if(sscanf(args, "%d %x", &n, &addr) != 2) {
+		printf("err too few arguments\n");
+		return -1;
+	}
+	for(int i=0; i<n; i++){
+		printf("0x%x: 0x%x\n", addr, vaddr_read(addr, 4));
+		addr += i*4;
+	}
+	return 0;
+}
+
+static int cmd_p(char *args){
+	TODO();
+}
+
+static int cmd_w(char *args){
+	TODO();
+}
+
+static int cmd_d(char *args){
+	TODO();
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -47,6 +96,12 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+	{ "si", "step the execution of the program", cmd_si },
+	{ "info", "printf registers or watchpoint informations", cmd_info },
+	{ "x"  ,  "printf memory informations", cmd_x },
+	{ "p",   "calculate the value of the expression", cmd_p },
+	{ "w",  "set watchpoint", cmd_w },
+	{ "d",  "delete watchpoint", cmd_d },
 
   /* TODO: Add more commands */
 
