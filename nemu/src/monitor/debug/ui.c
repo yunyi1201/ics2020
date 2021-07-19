@@ -83,7 +83,7 @@ static int cmd_p(char *args){
 	bool success = true;
 	word_t ans = expr(args, &success);
 	if(success){
-		printf("DEC: %u, HEX: %08x\n", ans, ans);
+		printf("DEC: %u, HEX: 0x%08x\n", ans, ans);
 		return 0;
 	}else{
 		printf("expr: faliure\n");
