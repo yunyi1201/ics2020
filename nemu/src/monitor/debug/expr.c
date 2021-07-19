@@ -32,7 +32,7 @@ static struct rule {
 	{"\\(", '(' },
 	{"\\)", ')' },
 	{"0x[0-9a-fA-F]", TK_HEX },
-	{"([\\$rsgt]([0-9ap])+)|(pc)", TK_REG},
+	{"\\$(([\\$rsgt]([0-9ap])+)|(pc))", TK_REG},
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
