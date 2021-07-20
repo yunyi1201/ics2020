@@ -3,8 +3,9 @@ static inline def_EHelper(lui) {
   print_asm_template2(lui);
 }
 
-static inline def_EHelper(li){
-	rtl_addi(s, ddest, rz, id_src2->imm);   	 
+static inline def_EHelper(addi) {
+	rtl_addi(s, ddest, dsrc1, id_src2->imm);
+	print_asm_template2(addi);
 }
 
 static inline def_EHelper(auipc){	

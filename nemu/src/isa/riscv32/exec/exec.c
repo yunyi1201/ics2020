@@ -20,6 +20,12 @@ static inline def_EHelper(store) {
   }
 }
 
+static inline def_EHelper(compute) {
+	switch(s->isa.instr.s.funct3){
+		EX(0, addi) 
+		default: exec_inv(s);
+	}
+}
 
 static inline void fetch_decode_exec(DecodeExecState *s) {
   s->isa.instr.val = instr_fetch(&s->seq_pc, 4);
@@ -29,8 +35,9 @@ static inline void fetch_decode_exec(DecodeExecState *s) {
     IDEX (0b01000, S, store)
     IDEX (0b01101, U, lui)
 		IDEX (0b00101, U, auipc)
-		IDEX (0b00100, I, li); 
-    EX   (0b11010, nemu_trap)
+		IDEX (0b00100, I, compute)	
+		//IDEX (0b11011, U, jal)
+		EX   (0b11010, nemu_trap)
     default: exec_inv(s);
   }
 }
