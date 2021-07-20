@@ -4,5 +4,10 @@ static inline def_EHelper(lui) {
 }
 
 static inline def_EHelper(li){
-	TODO();
+	rtl_addi(s, ddest, rz, id_src2->imm);   	 
+}
+
+static inline def_EHelper(auipc){	
+	(*ddest) = s->seq_pc + id_src1->imm;
+	print_asm_template2(auipc);
 }
