@@ -85,3 +85,17 @@ static inline def_EHelper(srl) {
 		case 1: rtl_sar(s, ddest, dsrc1, dsrc2); break; 
 	}
 }
+
+static inline def_EHelper(sltiu) {
+	if((uint32_t)(*dsrc1) < (uint32_t)(id_src2->imm)) 
+		*ddest = 1;
+	else 
+		*ddest = 0;
+}
+
+static inline def_EHelper(sltu) {
+	if((uint32_t)(*dsrc1) < (uint32_t)(*dsrc2)) 
+		*ddest = 1;
+	else 
+		*ddest = 0;
+}
