@@ -13,16 +13,3 @@ static inline def_EHelper(auipc) {
 	print_asm_template2(auipc);
 }
 
-static inline def_EHelper(jal) {
-	*ddest = s->seq_pc + 4;
-	vaddr_t vaddr = s->seq_pc + id_src1->imm; 
-	rtl_j(s, vaddr);
-}
-
-static inline def_EHelper(jarl) {
-	
-	rtl_addi(s, s0, dsrc1, id_src2->imm);
-	rtl_andi(s, s0, s0, ~1);
-	*ddest = s->seq_pc + 4;
-	rtl_jr(s, s0);
-}
