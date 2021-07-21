@@ -23,6 +23,12 @@ static inline def_EHelper(store) {
 static inline def_EHelper(compute) {
 	switch(s->isa.instr.s.funct3){
 		EX(0, addi) 
+		EX(1, slli)
+		EX(2, slti)
+		EX(4, xori)
+		EX(5, srli)
+		EX(6, ori)
+		EX(7, andi)
 		default: exec_inv(s);
 	}
 }
