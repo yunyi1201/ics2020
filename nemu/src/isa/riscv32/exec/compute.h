@@ -9,7 +9,7 @@ static inline def_EHelper(addi) {
 }
 
 static inline def_EHelper(auipc) {	
-	(*ddest) = s->seq_pc + id_src1->imm;
+	(*ddest) = cpu.pc + id_src1->imm;
 	print_asm_template2(auipc);
 }
 
