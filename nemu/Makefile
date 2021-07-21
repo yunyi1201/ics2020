@@ -78,10 +78,6 @@ $(OBJ_DIR)/%.o: src/%.c
 	@echo + CC $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(SO_CFLAGS) -c -o $@ $<
-	@$(CC) $(CFLAGS) $(SO_CFLAGS) -E -MF /dev/null &< | \
-		grep -ve '^#' | \
-		clang-format - > $(basename $@).i
-
 
 # Depencies
 -include $(OBJS:.o=.d)
