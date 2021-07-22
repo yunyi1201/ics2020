@@ -91,7 +91,7 @@ override ARGS ?= --log=$(BUILD_DIR)/nemu-log.txt
 override ARGS += --diff=$(DIFF_REF_SO)
 
 # Command to execute NEMU
-IMG := ./add-riscv32-nemu.elf
+IMG := ./add-riscv32-nemu.bin
 NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 
 $(BINARY): $(OBJS)
