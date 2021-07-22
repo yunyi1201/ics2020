@@ -48,6 +48,18 @@ static inline def_EHelper(rrcompute) {
 	}
 }
 
+static inline def_EHelper(cjmp) {
+	switch(s->isa.instr.b.funct3){
+		EX(0, beq)
+		EX(1, bne)
+		EX(4, blt)
+		EX(5, bge)
+		EX(6, bltu)
+		EX(7, bgeu)
+		default: exec_inv(s);
+	}
+}
+
 static inline void fetch_decode_exec(DecodeExecState *s) {
   s->isa.instr.val = instr_fetch(&s->seq_pc, 4);
   Assert(s->isa.instr.i.opcode1_0 == 0x3, "Invalid instruction");
@@ -60,6 +72,7 @@ static inline void fetch_decode_exec(DecodeExecState *s) {
 		IDEX (0b11011, J, jal)
 		IDEX (0b11001, I, jarl)
 		IDEX (0b01100, R, rrcompute)
+		IDEX (0b11000, B, cjmp)
 		EX   (0b11010, nemu_trap)
     default: exec_inv(s);
   }
