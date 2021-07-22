@@ -27,28 +27,28 @@ static inline def_EHelper(bne) {
 }
 
 static inline def_EHelper(blt) {
-	if(*dsrc1 < *dsrc2){
+	if((int32_t)*dsrc1 < (int32_t)*dsrc2){
 		vaddr_t vaddr = cpu.pc + id_dest->imm;
 		rtl_j(s, vaddr);
 	}
 }
 
 static inline def_EHelper(bge) {
-	if(*dsrc1 >= *dsrc2){
+	if((int32_t)*dsrc1 >= (int32_t)*dsrc2){
 		vaddr_t vaddr = cpu.pc + id_dest->imm;
 		rtl_j(s, vaddr);
 	}
 }
 
 static inline def_EHelper(bltu) {
-	if((int32_t)(*dsrc1) < (int32_t)(*dsrc2)){
+	if(*dsrc1 < *dsrc2){
 		vaddr_t vaddr = cpu.pc + id_dest->imm;
 		rtl_j(s, vaddr);
 	}
 }
 
 static inline def_EHelper(bgeu) {
-	if((int32_t)(*dsrc1) >= (int32_t)(*dsrc2)){
+	if(*dsrc1 >= *dsrc2){
 		vaddr_t vaddr = cpu.pc + id_dest->imm;
 		rtl_j(s, vaddr);
 	}
