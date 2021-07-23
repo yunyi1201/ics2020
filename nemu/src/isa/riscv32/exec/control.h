@@ -23,8 +23,8 @@ static inline def_EHelper(beq) {
 
 static inline def_EHelper(bne) {
 	rtl_mv(s, s0, &(cpu.pc));
-	rtl_addi(s, s0, s0, id_dest->imm);
-	rtl_jrelop(s, RELOP_NE, dsrc1, dsrc2, s0);
+	rtl_addi(s, s1, s0, id_dest->imm);
+	rtl_jrelop(s, RELOP_NE, dsrc1, dsrc2, s1);
 	print_asm_template3(bne);
 }
 

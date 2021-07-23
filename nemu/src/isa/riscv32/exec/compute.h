@@ -93,7 +93,7 @@ static inline def_EHelper(srl) {
 }
 
 static inline def_EHelper(sltiu) {
-	if((uint32_t)(*dsrc1) < (uint32_t)(id_src2->imm)) 
+	if((*dsrc1) < (id_src2->imm)) 
 		*ddest = 1;
 	else 
 		*ddest = 0;
@@ -101,7 +101,7 @@ static inline def_EHelper(sltiu) {
 }
 
 static inline def_EHelper(sltu) {
-	if((uint32_t)(*dsrc1) < (uint32_t)(*dsrc2)) 
+	if((*dsrc1) < (*dsrc2)) 
 		*ddest = 1;
 	else 
 		*ddest = 0;
