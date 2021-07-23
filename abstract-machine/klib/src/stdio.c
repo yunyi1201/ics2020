@@ -110,8 +110,8 @@ sprintf(char *buf, const char *fmt, ...)
   int off = 0;
   char *s;
 
-  //if (fmt == 0)
-	//panic("null fmt");
+  if (fmt == 0)
+		panic("null fmt");
 	for(int j=0; buf[j]; j++) 
 		buf[j] = '\0';
 	va_start(ap, fmt);
