@@ -50,11 +50,24 @@ void* memset(void* v,int c,size_t n) {
 }
 
 void* memmove(void* dst,const void* src,size_t n) {
-  return NULL;
+	char *cdst = (char *)dst;
+	const char *csrc = (const char *)src;
+	if(csrc > cdst) {
+		while(n-- > 0) {
+			*cdst++ = *csrc++;
+		}
+	} else {
+		cdst += n;
+		csrc += n;
+		while(n-- > 0) {
+			*--cdst = *--csrc;
+		}
+	}
+	return dst;
 }
 
 void* memcpy(void* out, const void* in, size_t n) {
-  return NULL;
+  return memmove(out, in, n);
 }
 
 int memcmp(const void* s1, const void* s2, size_t n) {

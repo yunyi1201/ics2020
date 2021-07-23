@@ -110,9 +110,9 @@ sprintf(char *buf, const char *fmt, ...)
   int off = 0;
   char *s;
 
-  if (fmt == 0)
-    panic("null fmt");
-
+  //if (fmt == 0)
+	//panic("null fmt");
+	memset(buf, '\0', strlen(buf));	
   va_start(ap, fmt);
   for(i = 0; (c = fmt[i] & 0xff) != 0; i++){
     if(c != '%'){
