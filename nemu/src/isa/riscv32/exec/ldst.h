@@ -21,3 +21,13 @@ static inline def_EHelper(st) {
     default: assert(0);
   }
 }
+
+static inline def_EHelper(lds) {
+	rtl_lms(s, ddest, dsrc1, id_src2->imm, s->width);
+	print_Dop(id_src1->str, OP_STR_SIZE, "%d(%s)", id_src2->imm, reg_name(id_src1->reg));
+	switch(s->width) {
+		case 1: print_asm_template2(lb); break; 
+		case 2: print_asm_template2(lh); break; 
+		default: assert(0);
+	}
+}
