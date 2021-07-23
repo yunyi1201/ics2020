@@ -19,7 +19,13 @@ char* strncpy(char* dst, const char* src, size_t n) {
 }
 
 char* strcat(char* dst, const char* src) {
-  return NULL;
+	char *ddest = dst;
+	int n = 0;
+	while(*dst++) n++;
+	int i;
+	for(i=0; src[i] && (dst[i] = ddest[i]); i++) ;
+	ddest[n+i] = '\0';
+ 	return ddest;
 }
 
 int strcmp(const char* s1, const char* s2) {
