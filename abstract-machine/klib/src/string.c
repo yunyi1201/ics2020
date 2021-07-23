@@ -11,7 +11,10 @@ size_t strlen(const char *s) {
 }
 
 char *strcpy(char* dst,const char* src) {
-  return NULL;
+	char *s = dst;
+	while((*dst++ = *src++) != '\0')
+		;
+  return s;
 }
 
 char* strncpy(char* dst, const char* src, size_t n) {
@@ -19,13 +22,13 @@ char* strncpy(char* dst, const char* src, size_t n) {
 }
 
 char* strcat(char* dst, const char* src) {
-	char *ddest = dst;
-	int n = 0;
-	while(*dst++) n++;
-	int i;
-	for(i=0; src[i] && (dst[i] = ddest[i]); i++) ;
-	ddest[n+i] = '\0';
- 	return ddest;
+	int n, i;
+	for(n=0; dst[n] != '\0'; n++)
+		;
+	for(i=0; src[i] != '\0'; i++)
+		dst[n+i] = src[i];
+	dst[n+i] = '\0';
+	return dst;
 }
 
 int strcmp(const char* s1, const char* s2) {
@@ -39,7 +42,11 @@ int strncmp(const char* s1, const char* s2, size_t n) {
 }
 
 void* memset(void* v,int c,size_t n) {
-  return NULL;
+	char *dst = (char*)v;
+	int i;
+	for(i=0; i<n; i++)
+		dst[i] = c;
+  return v;
 }
 
 void* memmove(void* dst,const void* src,size_t n) {
@@ -51,6 +58,12 @@ void* memcpy(void* out, const void* in, size_t n) {
 }
 
 int memcmp(const void* s1, const void* s2, size_t n) {
+	const char* p1 = s1, *p2 = s2;
+	while(n--){
+		if(*p1 != *p2)
+			return *p1 - *p2;
+		p1++; p2++;
+	}
   return 0;
 }
 
