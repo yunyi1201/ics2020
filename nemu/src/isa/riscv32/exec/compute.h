@@ -11,7 +11,7 @@ static inline def_EHelper(addi) {
 static inline def_EHelper(add) {
 	switch(s->isa.instr.r.funct7 & 0x20){
 		case 0: rtl_add(s, ddest, dsrc1, dsrc2); print_asm_template3(add); break;
-		case 1: rtl_sub(s, ddest, dsrc1, dsrc2); print_asm_template3(sub); break;
+		default: rtl_sub(s, ddest, dsrc1, dsrc2); print_asm_template3(sub); break;
 	}
 }
 
@@ -79,7 +79,7 @@ static inline def_EHelper(sll) {
 static inline def_EHelper(srli) {
 	switch(id_src2->imm & 0x400) {
 		case 0: rtl_shri(s, ddest, dsrc1, id_src2->imm); break;
-		case 1: rtl_sari(s, ddest, dsrc1, id_src2->imm); break;	
+		default: rtl_sari(s, ddest, dsrc1, id_src2->imm); break;	
 	}
 	print_asm_template3(srli);
 }
@@ -87,7 +87,7 @@ static inline def_EHelper(srli) {
 static inline def_EHelper(srl) {
 	switch(s->isa.instr.r.funct7 & 0x20){
 		case 0: rtl_shr(s, ddest, dsrc1, dsrc2); break;
-		case 1: rtl_sar(s, ddest, dsrc1, dsrc2); break; 
+		default: rtl_sar(s, ddest, dsrc1, dsrc2); break; 
 	}
 	print_asm_template3(srl);
 }
