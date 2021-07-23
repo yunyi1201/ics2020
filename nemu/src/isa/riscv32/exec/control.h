@@ -3,7 +3,7 @@ static inline def_EHelper(jal) {
 	rtl_mv(s, s0, &(cpu.pc));
 	rtl_addi(s, s0, s0, id_src1->imm);
 	rtl_jr(s, s0);
-	print_asm_template3(jal);
+	print_asm_template2(jal);
 }
 
 static inline def_EHelper(jarl) {
@@ -11,7 +11,7 @@ static inline def_EHelper(jarl) {
 	vaddr_t vaddr = (*dsrc1) & (~1);
 	rtl_addi(s, ddest, rz, s->seq_pc);
 	rtl_j(s, vaddr);
-	print_asm_template3(jarl);
+	print_asm_template2(jarl);
 }
 
 static inline def_EHelper(beq) {
