@@ -151,8 +151,8 @@ static inline def_rtl(jr, rtlreg_t *target) {
 }
 
 static inline def_rtl(jrelop, uint32_t relop,
-    const rtlreg_t *src1, const rtlreg_t *src2, vaddr_t target) {
+    const rtlreg_t *src1, const rtlreg_t *src2, rtlreg_t* dest) {
   bool is_jmp = interpret_relop(relop, *src1, *src2);
-  if (is_jmp) rtl_j(s, target);
+  if (is_jmp) rtl_jr(s, dest);
 }
 #endif

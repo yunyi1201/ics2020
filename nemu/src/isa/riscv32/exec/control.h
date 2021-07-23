@@ -9,49 +9,43 @@ static inline def_EHelper(jal) {
 static inline def_EHelper(jarl) {
 	rtl_addi(s, dsrc1, dsrc1, id_src2->imm);
 	vaddr_t vaddr = (*dsrc1) & (~1);
-	*ddest = s->seq_pc;
+	rtl_addi(s, ddest, rz, s->seq_pc);
 	rtl_j(s, vaddr);
 	print_asm_template2(jarl);
 }
 
 static inline def_EHelper(beq) {
-	if(*dsrc1 == *dsrc2){
-		vaddr_t vaddr = cpu.pc + id_dest->imm;
-		rtl_j(s, vaddr);
-	}
+	rtl_mv(s, s0, &(cpu.pc));
+	rtl_addi(s, s0, s0, id_dest->imm);
+	rtl_jrelop(s, RELOP_EQ, dsrc1, dsrc2, s0);
 }
 
 static inline def_EHelper(bne) {
-	if(*dsrc1 != *dsrc2){
-		vaddr_t vaddr = cpu.pc + id_dest->imm;
-		rtl_j(s, vaddr);
-	}
+	rtl_mv(s, s0, &(cpu.pc));
+	rtl_addi(s, s0, s0, id_dest->imm);
+	rtl_jrelop(s, RELOP_NE, dsrc1, dsrc2, s0);
 }
 
 static inline def_EHelper(blt) {
-	if((int32_t)*dsrc1 < (int32_t)*dsrc2){
-		vaddr_t vaddr = cpu.pc + id_dest->imm;
-		rtl_j(s, vaddr);
-	}
+	rtl_mv(s, s0, &(cpu.pc));
+	rtl_addi(s, s0, s0, id_dest->imm);
+	rtl_jrelop(s, RELOP_LT, dsrc1, dsrc2, s0);
 }
 
 static inline def_EHelper(bge) {
-	if((int32_t)*dsrc1 >= (int32_t)*dsrc2){
-		vaddr_t vaddr = cpu.pc + id_dest->imm;
-		rtl_j(s, vaddr);
-	}
+	rtl_mv(s, s0, &(cpu.pc));
+	rtl_addi(s, s0, s0, id_dest->imm);
+	rtl_jrelop(s, RELOP_GE, dsrc1, dsrc2, s0);
 }
 
 static inline def_EHelper(bltu) {
-	if(*dsrc1 < *dsrc2){
-		vaddr_t vaddr = cpu.pc + id_dest->imm;
-		rtl_j(s, vaddr);
-	}
+	rtl_mv(s, s0, &(cpu.pc));
+	rtl_addi(s, s0, s0, id_dest->imm);
+	rtl_jrelop(s, RELOP_LTU, dsrc1, dsrc2, s0);
 }
 
 static inline def_EHelper(bgeu) {
-	if(*dsrc1 >= *dsrc2){
-		vaddr_t vaddr = cpu.pc + id_dest->imm;
-		rtl_j(s, vaddr);
-	}
+	rtl_mv(s, s0, &(cpu.pc));
+	rtl_addi(s, s0, s0, id_dest->imm);
+	rtl_jrelop(s, RELOP_GEU, dsrc1, dsrc2, s0);
 }
