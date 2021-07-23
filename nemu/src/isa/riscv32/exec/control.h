@@ -1,12 +1,14 @@
 static inline def_EHelper(jal) {
-	*ddest = s->seq_pc;
-	vaddr_t vaddr = cpu.pc + id_src1->imm; 
-	rtl_j(s, vaddr);
+	rtl_addi(s, ddest, rz, s->seq_pc);
+	rtl_mv(s, s0, &(cpu.pc));
+	rtl_addi(s, s0, s0, id_src1->imm);
+	rtl_jr(s, s0);
 	print_asm_template2(jal);
 }
 
 static inline def_EHelper(jarl) {
-	vaddr_t vaddr = (*dsrc1 + id_src2->imm) & (~1);
+	rtl_addi(s, dsrc1, dsrc1, id_src2->imm);
+	vaddr_t vaddr = (*dsrc1) & (~1);
 	*ddest = s->seq_pc;
 	rtl_j(s, vaddr);
 	print_asm_template2(jarl);
