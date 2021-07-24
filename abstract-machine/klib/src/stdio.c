@@ -66,6 +66,7 @@ int printf(const char *fmt, ...) {
 			state = 0;
 		}
 	}
+	va_end(ap);
   return cnt;
 }
 
@@ -142,10 +143,12 @@ sprintf(char *buf, const char *fmt, ...)
       break;
     }
   }
+	va_end(ap);
   return off;
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
+
   return 0;
 }
 
