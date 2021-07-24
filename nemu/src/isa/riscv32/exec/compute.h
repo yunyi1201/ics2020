@@ -16,10 +16,7 @@ static inline def_EHelper(add) {
 }
 
 static inline def_EHelper(slti) {
-	if((int32_t)(*dsrc1) < (int32_t)id_src2->imm)
-		*ddest = 1;
-	else 
-		*ddest = 0;
+	rtl_setrelopi(s, RELOP_LT, ddest, dsrc1, id_src2->imm);
 	print_asm_template3(slti);
 }
 
@@ -90,17 +87,11 @@ static inline def_EHelper(srl) {
 }
 
 static inline def_EHelper(sltiu) {
-	if((*dsrc1) < (id_src2->imm)) 
-		*ddest = 1;
-	else 
-		*ddest = 0;
+	rtl_setrelopi(s, RELOP_LTU, ddest, dsrc1, id_src2->imm);
 	print_asm_template3(sltiu);
 }
 
 static inline def_EHelper(sltu) {
-	if((*dsrc1) < (*dsrc2)) 
-		*ddest = 1;
-	else 
-		*ddest = 0;
+	rtl_setrelop(s, RELOP_LTU, ddest, dsrc1, dsrc2);
 	print_asm_template3(sltu);
 }
