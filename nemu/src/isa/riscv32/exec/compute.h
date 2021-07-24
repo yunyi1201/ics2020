@@ -24,10 +24,6 @@ static inline def_EHelper(slti) {
 }
 
 static inline def_EHelper(slt) {
-	if((*dsrc1) < (*dsrc2))
-		*ddest = 1;
-	else 
-		*ddest = 0;
 	rtl_setrelop(s, RELOP_LT, ddest, dsrc1, dsrc2);
 	print_asm_template3(slt);
 }
