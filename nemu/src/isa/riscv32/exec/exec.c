@@ -41,17 +41,31 @@ static inline def_EHelper(compute) {
 }
 
 static inline def_EHelper(rrcompute) {
-	switch(s->isa.instr.r.funct3){
-		EX(0, add)
-		EX(1, sll)
-		EX(2, slt)
-		EX(3, sltu)
-		EX(4, xor)
-		EX(5, srl)
-		EX(6, or)
-		EX(7, and)
-		default: exec_inv(s);
-	}
+	if(s->isa.instr.r.funct7 == 0 || s->isa.instr.r.funct7 == 32) {
+		switch(s->isa.instr.r.funct3){
+			EX(0, add)
+			EX(1, sll)
+			EX(2, slt)
+			EX(3, sltu)
+			EX(4, xor)
+			EX(5, srl)
+			EX(6, or)
+			EX(7, and)
+			default: exec_inv(s);
+		}
+	} else if(s->isa.instr.r.funct7 == 1) {
+		switch(s->isa.instr.r.funct3){
+			EX(0, mul)
+			EX(1, mulh)
+			EX(2, mulhsu)
+			EX(3, mulhu)
+			EX(4, div)
+			EX(5, divu)
+			EX(6, rem)
+			EX(7, remu)
+		}
+	} else 
+		exec_inv(s);
 }
 
 static inline def_EHelper(cjmp) {
