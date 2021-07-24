@@ -7,12 +7,12 @@
 
 static char digits[] = "0123456789ABCDEF";
 
-static void printint(int xx, int base, int sgn) 
+static size_t printint(char *str, int xx, int base, int sgn) 
 {
 	char buf[16];
-	int i, neg;
+	int i, j, neg;
 	unsigned int x;
-	neg = 0;
+	j = neg = 0;
 	if(sgn && xx < 0){
 		neg = 1;
 		x = -xx;
@@ -27,38 +27,63 @@ static void printint(int xx, int base, int sgn)
 		buf[i++] = '-';
 	}
 	while(--i > 0) 
-		putch(buf[i]);
+		str[j++] = buf[i];
+	return j;
 }
 // 状态机
 int printf(const char *fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
-	int state, c, i, cnt;
-	state = cnt = 0;
+	int cnt = 0;
+	char ans[2000] = {0};
+	cnt = vsprintf(ans, fmt, ap);
+	va_end(ap);
+	for(int i=0; ans[i]; i++)
+		putch(ans[i]);
+	return cnt;
+}
+
+int
+sprintf(char *buf, const char *fmt, ...)
+{
+		va_list ap;
+		va_start(ap, fmt);
+		int ret = 0;
+		ret = vsprintf(buf, fmt, ap);
+		va_end(ap);
+    return ret;
+}
+
+int vsprintf(char *out, const char *fmt, va_list ap) {
+	int state, c, i, cnt, j;
+	j = state = cnt = 0;
 	for(i=0; fmt[i] != '\0'; i++){
 		c = fmt[i] & 0xff;
 		if(state == 0) {
 			if(c == '%') {
 				state = '%';
 			}else{
-				putch(c);
+				//putch(c);
+				out[j++] = c;
+				cnt ++;
 			}
 		}else if(state == '%') {
 			if(c == 'd') {
-				printint(va_arg(ap, int), 10, 1);
+				j += printint(out+j, va_arg(ap, int), 10, 1);
 				cnt++;
 			}else if(c == 'x') {
-				printint(va_arg(ap, int), 16, 0);
+				j += printint(out+j, va_arg(ap, int), 16, 0);
 				cnt++;
 			}else if(c == 's') {
 				char *s = va_arg(ap, char*);
-				putstr(s);
+				//putstr(s);
+				for(int k=0; s[k]; k++)
+					out[j++] = s[k];
 				cnt ++;
-			}else if(c == 'c') {
-				putch(va_arg(ap, unsigned int));
-				cnt ++;
-			}else if(c == '%') {
-				putch(c);
+			} else if(c == '%') {
+				//putch(c);
+				out[j++] = '%';
+				cnt++;
 			}else {
 				putch('%');
 				putch(c);
@@ -66,90 +91,8 @@ int printf(const char *fmt, ...) {
 			state = 0;
 		}
 	}
-	va_end(ap);
+	out[j] = '\0';
   return cnt;
-}
-
-static int
-sputc(char *s, char c)
-{
-  *s = c;
-  return 1;
-}
-
-static int
-sprintint(char *s, int xx, int base, int sign)
-{
-  char buf[16];
-  int i, n;
-  unsigned int x;
-
-  if(sign && (sign = xx < 0))
-    x = -xx;
-  else
-    x = xx;
-
-  i = 0;
-  do {
-    buf[i++] = digits[x % base];
-  } while((x /= base) != 0);
-
-  if(sign)
-    buf[i++] = '-';
-
-  n = 0;
-  while(--i >= 0)
-    n += sputc(s+n, buf[i]);
-  return n;
-}
-
-int
-sprintf(char *buf, const char *fmt, ...)
-{
-  va_list ap;
-  int i, c;
-  int off = 0;
-  char *s;
-  //for(int j=0; buf[j]; j++) 
-	//buf[j] = '\0';
-	va_start(ap, fmt);
-  for(i = 0; (c = fmt[i] & 0xff) != 0; i++){
-    if(c != '%'){
-      off += sputc(buf+off, c);
-      continue;
-    }
-    c = fmt[++i] & 0xff;
-    if(c == 0)
-      break;
-    switch(c){
-    case 'd':
-      off += sprintint(buf+off, va_arg(ap, int), 10, 1);
-      break;
-    case 'x':
-      off += sprintint(buf+off, va_arg(ap, int), 16, 0);
-      break;
-    case 's':
-				s = va_arg(ap, char *);
-        for(; *s; s++)
-        	off += sputc(buf+off, *s);
-      break;
-    case '%':
-      off += sputc(buf+off, '%');
-      break;
-    default:
-      // Print unknown % sequence to draw attention.
-      off += sputc(buf+off, '%');
-      off += sputc(buf+off, c);
-      break;
-    }
-  }
-	va_end(ap);
-  return off;
-}
-
-int vsprintf(char *out, const char *fmt, va_list ap) {
-
-  return 0;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
