@@ -1,4 +1,7 @@
+#include <monitor/difftest.h>
+
 static inline def_EHelper(jal) {
+	difftest_skip_dut(1, 2);
 	rtl_addi(s, ddest, rz, s->seq_pc);
 	rtl_mv(s, s0, &(cpu.pc));
 	rtl_addi(s, s0, s0, id_src1->imm);
@@ -7,6 +10,7 @@ static inline def_EHelper(jal) {
 }
 
 static inline def_EHelper(jarl) {
+	difftest_skip_dut(1, 2);
 	rtl_addi(s, dsrc1, dsrc1, id_src2->imm);
 	vaddr_t vaddr = (*dsrc1) & (~1);
 	rtl_addi(s, ddest, rz, s->seq_pc);
