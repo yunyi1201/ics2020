@@ -5,7 +5,7 @@ static AM_TIMER_UPTIME_T boot_time = {};
 
 static uint64_t _get_time() {
 	uint64_t usec = inl(RTC_ADDR);
-	uint64_t sec  = inl(RTC_ADDR);
+	uint64_t sec  = inl(RTC_ADDR + 4);
 	return sec * 1000000 + usec;
 }
 void __am_timer_init() {
