@@ -24,7 +24,8 @@ static inline def_DopHelper(csr) {
 	op->type = OP_TYPE_REG;
 	op->reg = map_csr_addr(val);
 	op->preg = &reg_csr(val);
-	print_Dop(op->str, OP_STR_SIZE, "%s", reg_csr_name(op->reg));
+
+	print_Dop(op->str, OP_STR_SIZE, "%s", csr_reg_name(op->reg));
 }
 
 static inline def_DHelper(I) {
