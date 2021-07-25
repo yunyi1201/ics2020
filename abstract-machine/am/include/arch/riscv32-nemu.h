@@ -2,8 +2,8 @@
 #define ARCH_H__
 
 struct Context {
-  uintptr_t epc, cause, gpr[32], status;
-  void *pdir;
+	void *pdir;
+  uintptr_t gpr[32], cause, status, epc;
 };
 
 #define GPR1 gpr[17] // a7
