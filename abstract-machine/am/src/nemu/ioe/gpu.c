@@ -22,7 +22,27 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   };
 }
 
+static uint32_t __get_pixel_pos(int x, int y, int i, int j) {
+  /* Draw a graph from (x, y) -> (i, j)
+   * for __am_gpu_fbdraw */
+  x += i;
+  y += j;
+  return y * GPU_W + x;
+}
+
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
+
+	int w = ctl->w, h = ctl->h;
+  int i, j;
+
+  // Map the [pixels] to [fb]
+  uint32_t *fb = (uint32_t *)(uintptr_t) FB_ADDR;
+  for (i = 0; i < w; ++i) {
+    for (j = 0; j < h; ++j) {
+      uint32_t col = *((uint32_t* ) (ctl->pixels) + (j * w + i));
+      *(fb + __get_pixel_pos(ctl->x, ctl->y, i, j)) = col;
+    }
+  }
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);
   }
