@@ -21,6 +21,7 @@
 
 #define VGACTL_PORT 0x100 // Note that this is not the standard
 #define VGACTL_MMIO 0xa1000100
+#define SYNC_MMIO   VGACTL_MMIO + 4
 
 static SDL_Renderer *renderer = NULL;
 static SDL_Texture *texture = NULL;
@@ -40,6 +41,13 @@ static inline void update_screen() {
 void vga_update_screen() {
   // TODO: call `update_screen()` when the sync register is non-zero,
   // then zero out the sync register
+	extern IOMap* fetch_mmio_map(paddr_t addr); 
+	IOMap *sync_io = fetch_mmio_map(SYNC_MMIO);
+	uint32_t sync = map_read(SYNC_MMIO, sizeof(uint32_t), sync_io);
+	if(sync != 0) {
+		update_screen();
+		map_write(SYNC_MMIO, 0, sizeof(uint32_t), sync_io);
+	}
 }
 
 void init_vga() {
