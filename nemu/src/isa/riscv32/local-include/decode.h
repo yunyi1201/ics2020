@@ -38,7 +38,7 @@ static inline def_DHelper(CSRI) {
 	if(s->isa.instr.i.funct3 == 0)
 		return ;
 	decode_op_r(s, id_src1, s->isa.instr.i.rs1, true);
-	word_t imm = s->isa.instr.i.simm11_0;
+	word_t imm = (word_t)(s->isa.instr.i.simm11_0);
 	decode_op_csr(s, id_src2, imm, true);
 	decode_op_r(s, id_dest, s->isa.instr.i.rd, true);
 }
