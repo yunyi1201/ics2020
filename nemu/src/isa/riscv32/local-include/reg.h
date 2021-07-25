@@ -28,7 +28,7 @@ static inline word_t map_csr_addr(word_t addr) {
 		case 0x142: return 4;
 		case 0x143: return 5;
 		case 0x180: return 6;
-		default: assert(0);
+		default: Assert(0, "%d", addr);
 	}
 	return 0;
 }
