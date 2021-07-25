@@ -13,6 +13,7 @@ Context* __am_irq_handle(Context *c) {
     //}
 		if(c->cause == -1) {
 			ev.event = EVENT_YIELD; 
+			c->epc += 4;
 		} else {
 			ev.event = EVENT_ERROR;
 		}
