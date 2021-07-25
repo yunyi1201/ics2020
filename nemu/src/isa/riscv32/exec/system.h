@@ -33,10 +33,19 @@ static inline def_EHelper(csrrci) {
 }
 
 static inline def_EHelper(ecall) {			
-	bool success = true;
-	word_t stvec  = isa_reg_str2val("stvec", &success);
-	word_t scause = isa_reg_str2val("a7", &success);
+	word_t stvec  = cpu.csr[1]._32;
+	word_t scause = cpu.gpr[17]._32; 
 	extern void raise_intr(DecodeExecState*, word_t, vaddr_t);
 	print_asm_template1(ecall);
 	raise_intr(s, scause, stvec);
+}
+
+static inline def_EHelper(sret) {
+	s->is_jmp = true;
+	s->jmp_pc = cpu.csr[3]._32;
+	print_asm_template1(sret);
+}
+
+static inline def_EHelper(ebreak) {
+	TODO();
 }

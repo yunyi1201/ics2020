@@ -81,13 +81,22 @@ static inline def_EHelper(cjmp) {
 }
 
 static inline def_EHelper(system) {
-	switch(s->isa.instr.i.funct3) {
-		EX(0, ecall) 
-		EX(1, csrrw)
-		EX(2, csrrs)
-		EX(3, csrrc)
-		EX(5, csrrwi)
-		default: exec_inv(s);
+	if(s->isa.instr.i.funct3 == 0) {
+		switch(s->isa.instr.i.simm11_0) {
+			EX(0, ecall)
+			EX(1, ebreak)
+			EX(0x102, sret) 
+			default: exec_inv(s);
+		}
+	} else {
+		switch(s->isa.instr.i.funct3) {
+		//EX(0, ecall) 
+			EX(1, csrrw)
+			EX(2, csrrs)
+			EX(3, csrrc)
+			EX(5, csrrwi)
+			default: exec_inv(s);
+		}
 	}
 }
 
