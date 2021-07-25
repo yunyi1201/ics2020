@@ -82,6 +82,7 @@ static inline def_EHelper(cjmp) {
 
 static inline def_EHelper(system) {
 	switch(s->isa.instr.i.funct3) {
+		EX(0, ecall) 
 		EX(1, csrrw)
 		EX(2, csrrs)
 		EX(3, csrrc)
