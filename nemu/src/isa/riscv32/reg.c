@@ -33,7 +33,7 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 		if(strcmp(s+1, reg_name(i)) == 0)
 			return reg_l(i);
 	}
-	for(i=0; i<32; i++){
+	for(i=0; i<7; i++){
 		if(strcmp(s+1, csr_reg_name(i)) == 0)
 			return reg_csr(i);
 	}
