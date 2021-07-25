@@ -20,10 +20,24 @@ static inline def_DopHelper(r) {
   print_Dop(op->str, OP_STR_SIZE, "%s", reg_name(op->reg));
 }
 
+static inline def_DopHelper(csr) {
+	op->type = OP_TYPE_REG;
+	op->reg = map_csr_addr(val);
+	op->preg = &reg_csr(val);
+	print_Dop(op->str, OP_STR_SIZE, "%s", reg_csr_name(op->reg));
+}
+
 static inline def_DHelper(I) {
   decode_op_r(s, id_src1, s->isa.instr.i.rs1, true);
   decode_op_i(s, id_src2, s->isa.instr.i.simm11_0, true);
   decode_op_r(s, id_dest, s->isa.instr.i.rd, false);
+}
+
+static inline def_DHelper(CSRI) {
+	decode_op_r(s, id_src1, s->isa.instr.i.rs1, true);
+	word_t imm = s->isa.instr.i.simm11_0;
+	decode_op_csr(s, id_src2, imm, true);
+	decode_op_r(s, id_dest, s->isa.instr.i.rd, true);
 }
 
 static inline def_DHelper(U) {
