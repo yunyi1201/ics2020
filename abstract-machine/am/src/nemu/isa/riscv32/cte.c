@@ -1,6 +1,7 @@
 #include <am.h>
 #include <riscv32.h>
 #include <klib.h>
+#include <stdint.h>
 
 static Context* (*user_handler)(Event, Context*) = NULL;
 
@@ -20,8 +21,10 @@ Context* __am_irq_handle(Context *c) {
 
 extern void __am_asm_trap(void);
 
+
 bool cte_init(Context*(*handler)(Event, Context*)) {
   // initialize exception entry
+	printf("0x%x\n", (uint32_t)(__am_asm_trap));
   asm volatile("csrw stvec, %0" : : "r"(__am_asm_trap));
 
   // register event handler
