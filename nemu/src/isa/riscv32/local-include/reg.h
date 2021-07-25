@@ -22,13 +22,13 @@ static inline word_t map_csr_addr(word_t addr) {
 	assert(addr >= 0x100 && addr <= 0x180);
 	switch(addr) {
 		case 0x100: return 0;	
-		case 0x101: return 1;
+		case 0x105: return 1;
 		case 0x140: return 2;
 		case 0x141: return 3;
 		case 0x142: return 4;
 		case 0x143: return 5;
 		case 0x180: return 6;
-		default: return 2;//Assert(0, "error:0x%x", addr);
+		default: Assert(0, "error:0x%x", addr);
 	}
 	return 0;
 }
