@@ -49,7 +49,7 @@ static Fopen open_table[F_NUM];
 int fs_open(const char* filename, int flags, int mode) {
 	assert(filename != NULL);
 	int fd = -1;
-	for(int i=0; i<F_NUM; i++) 
+	for(int i=3; i<F_NUM; i++) 
 		if(strcmp(filename, file_table[i].name) == 0) 
 			fd = i;
 	assert(fd != -1);
