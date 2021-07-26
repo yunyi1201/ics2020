@@ -5,9 +5,9 @@ static Context* do_event(Event e, Context* c) {
   //  default: panic("Unhandled event ID = %d", e.event);
  // }
 	if(e.event == EVENT_YIELD) {
-		yield();
+		//yield();
+		printf("Tirger yield event ID = %d", e.event);
 	}
-		//printf("Tirger event ID = %d", e.event);
 	else if(e.event == EVENT_SYSCALL) {
 		extern void do_syscall(Context*);
 		do_syscall(c);
