@@ -1,5 +1,6 @@
 #include <proc.h>
 
+
 #define MAX_NR_PROC 4
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
@@ -21,7 +22,8 @@ void hello_fun(void *arg) {
 
 void init_proc() {
   switch_boot_pcb();
-
+	extern void naive_uload(PCB*, const char*);
+	naive_uload(NULL, NULL);
   Log("Initializing processes...");
 
   // load program here
