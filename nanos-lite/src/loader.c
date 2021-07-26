@@ -19,6 +19,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	assert(*(uint32_t *)ehdr->e_ident == 0x7f454c);
 
 	uint32_t phdr_offset = ehdr->e_phoff;
+	printf("phdr_offset: %d\n", phdr_offset);
 	for(int i=0; i<ehdr->e_phnum; i++) {
 		Elf_Phdr *phdr = NULL;
 		ramdisk_read((void *)phdr, phdr_offset, sizeof(Elf_Phdr));
