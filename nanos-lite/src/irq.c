@@ -6,7 +6,7 @@ static Context* do_event(Event e, Context* c) {
  // }
 	if(e.event == EVENT_YIELD)
 		printf("Tirger event ID = %d", e.event);
-	else if(e.event == EVENT_YIELD) {
+	else if(e.event == EVENT_SYSCALL) {
 		extern void do_syscall(Context*);
 		do_syscall(c);
 	}
