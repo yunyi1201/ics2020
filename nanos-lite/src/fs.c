@@ -2,14 +2,16 @@
 
 #define F_NUM (sizeof(file_table) / sizeof(Finfo))
 
+/*
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
+*/
 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
 extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 
-
+/*
 typedef struct {
   char *name;
   size_t size;
@@ -17,6 +19,7 @@ typedef struct {
   ReadFn read;
   WriteFn write;
 } Finfo;
+*/
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
 
@@ -106,6 +109,11 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
 	}
 	if(file.size != 0) assert(fo.open_offset>=0 && fo.open_offset <= file.size);
 	return fo.open_offset;
+}
+
+Finfo* get_Finfo(int fd) {
+	assert(fd >=0 && fd < F_NUM);
+	return &file_table[fd];
 }
 
 void init_fs() {
