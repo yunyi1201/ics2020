@@ -26,7 +26,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	uint32_t phdr_offset = elf->e_phoff;
 	//printf("phdr_offset: 0x%x\n", phdr_offset);
 	//printf("entry: 0x%x\n", elf->e_entry);
-	Log("entry: %p\n", elf->e_entry);
+	Log("entry: %p", (uintptr_t)elf->e_entry);
 	for(int i=0; i<elf->e_phnum; i++) {
 		Elf_Phdr phdr; 
 		Elf_Phdr *elf_phdr = &phdr;
