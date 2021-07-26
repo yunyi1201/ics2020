@@ -12,9 +12,8 @@ int sys_exit(int status) {
 }
 
 int sys_write(int fd, void* buf, size_t len) {
-	//for(int i=0; i<len; i++) 
-	//putch(((char*)buf)[i]);
-	putch('h');
+	for(int i=0; i<len; i++) 
+		putch(((char*)buf)[i]);
 	return len;
 }
 
@@ -25,7 +24,7 @@ void do_syscall(Context *c) {
   switch (a[0]) {
 			case SYS_exit: 	c->GPRx = sys_exit(c->GPR2);  break; 
 			case SYS_yield: c->GPRx = sys_yield(); break;
-			case SYS_write: putch('s'); assert(c->GPR2 == 1 || c->GPR2 == 2); c->GPRx = sys_write(c->GPR2, (void*)c->GPR3, c->GPR4); break;
+			case SYS_write: assert(c->GPR2 == 1 || c->GPR2 == 2); c->GPRx = sys_write(c->GPR2, (void*)c->GPR3, c->GPR4); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }
