@@ -94,7 +94,7 @@ int fs_close(int fd) {
 	return 0;
 }
 
-int fs_lseek(int fd, size_t offset, int whence) {
+size_t fs_lseek(int fd, size_t offset, int whence) {
 	assert(fd >= 0 && fd < F_NUM);
 	Finfo file = file_table[fd];	
 	Fopen fo   = open_table[fd];
