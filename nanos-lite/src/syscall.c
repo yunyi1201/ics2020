@@ -12,6 +12,9 @@ int sys_exit(int status) {
 }
 
 int sys_write(int fd, void* buf, size_t len) {
+
+	Log("sys_write");
+	Log("time: %s, %s", __TIME__, __DATE__);
 	for(int i=0; i<len; i++) 
 		putch(((char*)buf)[i]);
 	return len;
