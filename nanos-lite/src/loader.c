@@ -37,6 +37,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		}	
 		phdr_offset += sizeof(Elf_Phdr);
 	}
+	printf("0x%x\n", elf->e_entry);
   return (uintptr_t)elf->e_entry;
 }
 
