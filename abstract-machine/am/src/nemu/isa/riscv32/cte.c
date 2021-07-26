@@ -14,7 +14,11 @@ Context* __am_irq_handle(Context *c) {
 		if(c->cause == -1) {
 			ev.event = EVENT_YIELD; 
 			c->epc += 4;
-		} else {
+		} else if(c->cause >=0 && c->cause < 20) {
+			ev.event = EVENT_SYSCALL;
+			c->epc += 4;
+		}
+		else {
 			ev.event = EVENT_ERROR;
 		}
 
