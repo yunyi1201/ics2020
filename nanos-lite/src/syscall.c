@@ -23,8 +23,8 @@ void do_syscall(Context *c) {
   a[0] = c->GPR1;
 
   switch (a[0]) {
-		case SYS_exit: 	c->GPRx = sys_exit(c->GPR2);  break; 
-		case SYS_yield: c->GPRx = sys_yield(); break;
+		//case SYS_exit: 	c->GPRx = sys_exit(c->GPR2);  break; 
+		//case SYS_yield: c->GPRx = sys_yield(); break;
 		//case SYS_write: putch('s'); assert(c->GPR2 == 1 || c->GPR2 == 2); c->GPRx = sys_write(c->GPR2, (void*)c->GPR3, c->GPR4); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
