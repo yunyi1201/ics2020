@@ -6,6 +6,10 @@ static Context* do_event(Event e, Context* c) {
  // }
 	if(e.event == EVENT_YIELD)
 		printf("Tirger event ID = %d", e.event);
+	else if(e.event == EVENT_YIELD) {
+		extern void do_syscall(Context*);
+		do_syscall(c);
+	}
 	else 
 		panic("Unhandled event ID = %d", e.event);
   return c;
