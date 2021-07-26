@@ -28,7 +28,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	uint32_t phdr_offset = elf->e_phoff;
 	printf("phdr_offset: 0x%x\n", phdr_offset);
 	printf("entry: 0x%x\n", elf->e_entry);
-	printf("entry: %d\n", get_Finfo(fd)->disk_offset);
+	printf("file size: %d\n", get_Finfo(fd)->size);
+	printf("file offset: %d\n", get_Finfo(fd)->disk_offset);
 	for(int i=0; i<elf->e_phnum; i++) {
 		Elf_Phdr phdr; 
 		Elf_Phdr *elf_phdr = &phdr;
