@@ -29,16 +29,16 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	uint32_t key = inl(KBD_ADDR);
 	size_t ret;
 	if(key >= KEYDOWN_MASK) {
-		kbd->keydown = 1;
-		kbd->keycode = key ^ KEYDOWN_MASK;
+		kbd.keydown = 1;
+		kbd.keycode = key ^ KEYDOWN_MASK;
 		ret = sprintf(buf, "%s %s\n", "kd", keyname[kbd.keycode]);
 	} else if(key != 0) {
-		kbd->keydown = 0;
-		kbd->keycode = key;
+		kbd.keydown = 0;
+		kbd.keycode = key;
 		ret = sprintf(buf, "%s %s\n", "ku", keyname[kbd.keycode]);	
 	} else
 		return 0;
-	return 0;
+	return ret;
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
