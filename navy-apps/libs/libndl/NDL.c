@@ -21,6 +21,8 @@ uint32_t NDL_GetTicks() {
 int NDL_PollEvent(char *buf, int len) {
 	FILE *f = fopen("/dev/events", "r");
 
+	for(int i=0; buf[i]; i++)        //BUG
+		buf[i] = '\0';
   unsigned char c;
   size_t size = 0;
   c = fgetc(f);
