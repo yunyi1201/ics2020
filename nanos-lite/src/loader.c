@@ -39,7 +39,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 			printf("elf_phdr vaddr  :0x%x\n", elf_phdr->p_vaddr);
 			printf("phdr offset: %d\n", phdr_offset);
 			printf("load file addr = 0x%x\n", vaddr);
-			printf("load memsz :%d\n", memsz);
+			printf("load memsz :0x%x\n", memsz);
 			ramdisk_read((void *)vaddr, 443927+offset, memsz);
 			//fs_lseek(fd, offset, SEEK_SET);
 			//fs_read(fd, (void *)vaddr, memsz);
