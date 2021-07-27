@@ -24,7 +24,7 @@ void init_proc() {
   switch_boot_pcb();
 	extern void naive_uload(PCB*, const char*);
   Log("Initializing processes...");
-	naive_uload(NULL, "/bin/file-test");
+	naive_uload(NULL, "/bin/dummy");
 
   // load program here
 
