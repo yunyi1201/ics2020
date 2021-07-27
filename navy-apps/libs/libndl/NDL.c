@@ -3,13 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 
+static struct timeval boottime;
+
 uint32_t NDL_GetTicks() {
-  return 0;
+	struct timeval now;
+	gettimeofday(&now, NULL);
+	uint32_t ticks = (now.tv_sec - boottime.tv_sec)*1000 + (now.tv_usec - boottime.tv_usec)/1000;
+  return ticks;
 }
 
 int NDL_PollEvent(char *buf, int len) {
@@ -57,6 +63,7 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+	gettimeofday(&boottime, NULL);
   return 0;
 }
 

@@ -1,26 +1,18 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include <NDL.h>
 
-//typedef __uint8_t uint8_t;
-//typedef __uint16_t uint16_t;
-//typedef __uint32_t uint32_t;
-//typedef __uint64_t uint64_t;
+//extern int NDL_Init(uint32_t);
+//extern uint32_t NDL_GetTicks();
 
-
-//#include "../../libs/libndl/include/NDL.h"
 int main(){
-printf("timer-test\n");
-//NDL_Init(0);
-//int i =0;
- //uint32_t s = NDL_GetTicks();
- struct timeval time;
- //uint32_t t = s+1000;
- gettimeofday(&time, NULL);
- uint32_t sec = time.tv_sec;
+	printf("timer-test\n");
+	NDL_Init(0);
+	int i =0;
+	uint32_t s = NDL_GetTicks();
+ uint32_t t = s+1000;
  while(1){
-		gettimeofday(&time, NULL);
-		/*
     s = NDL_GetTicks();
      if(s >= t)
      {
@@ -29,11 +21,6 @@ printf("timer-test\n");
         printf("%d tick \n",i);
 
      }
-		 */
-		if(time.tv_sec > sec) {
-			printf("%d sec\n", sec);
-			sec ++;
-		}
  }
  return 0;
 }
