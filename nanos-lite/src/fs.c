@@ -60,8 +60,11 @@ size_t fs_read(int fd, void *buf, size_t len) {
 
 	assert(fd >= 0 && fd < F_NUM);
 	Finfo *file = &file_table[fd];	
-	if(file_table[fd].read != NULL)
-		return file_table[fd].read(buf, 0, len);
+	if(file_table[fd].read != NULL) {
+		size_t offset = file_table[fd].open_offset;
+		file_table[fd].open_offset += len;
+		return file_table[fd].read(buf, file_table[fd].disk_offset + offset, len);
+	}
 	if(file->open_offset == file->size)
 		return 0;
 	if(file->open_offset + len > file->size)
@@ -74,7 +77,9 @@ size_t fs_read(int fd, void *buf, size_t len) {
 size_t fs_write(int fd, void *buf, size_t len) {
 	assert(fd >= 0 && fd < F_NUM);
 	if(file_table[fd].write != NULL) {
-		return file_table[fd].write(buf, 0, len);
+		size_t offset = file_table[fd].open_offset;
+		file_table[fd].open_offset += len;
+		return file_table[fd].write(buf, offset + file_table[fd].disk_offset, len);
 	}
 	Finfo *file = &file_table[fd];	
 	if(file->open_offset >= file->size)
