@@ -37,6 +37,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 			uintptr_t vaddr = elf_phdr->p_vaddr;
 			size_t filesz = elf_phdr->p_filesz;
 			size_t memsz = elf_phdr->p_memsz;
+			Log("file addr = %p", vaddr);
 			ramdisk_read((void *)vaddr, offset, memsz);
 			//fs_lseek(fd, offset, SEEK_SET);
 			//fs_read(fd, (void *)vaddr, memsz);
