@@ -10,6 +10,8 @@ extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 extern size_t serial_write(const void *buf, size_t offset, size_t len);
 extern size_t events_read(void* buf, size_t offset, size_t len);
+extern size_t dispinfo_read(void *buf, size_t offset, size_t len);
+extern size_t fb_write(const void *buf, size_t offset, size_t len);
 
 typedef struct {
   char *name;
@@ -38,6 +40,8 @@ static Finfo file_table[] __attribute__((used)) = {
   [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write, 0},
   [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write, 0},
 	{"/dev/events", 0, 0, events_read, invalid_write, 0},
+	{"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write, 0},
+	{"/dev/fb",     0, 0,  invalid_read, fb_write, 0},
 #include "files.h"
 };
 
@@ -103,4 +107,8 @@ size_t fs_lseek(int fd, size_t offset, int whence) {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+	AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
+  int fd              = fs_open("/dev/fb", 0, 0);
+  file_table[fd].size = gpu.vmemsz;
+  fs_close(fd);	
 }
