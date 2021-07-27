@@ -16,6 +16,9 @@ size_t sys_write(int fd, void* buf, size_t len) {
 
 	//Log("sys_write");
 	//Log("time: %s, %s", __TIME__, __DATE__);
+	if( fd == 1 || fd == 2)
+		for(int i=0; i<len; i++)
+			putch(((char *)buf)[i]);
 	return fs_write(fd, buf, len);
 }
 
