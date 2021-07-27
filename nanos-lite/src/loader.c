@@ -10,13 +10,14 @@
 # define Elf_Phdr Elf32_Phdr
 #endif
 
+#define file 472231 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
 extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
 	Elf_Ehdr ehdr;
 	Elf_Ehdr *elf = &ehdr;
-	ramdisk_read((void *)elf, 400143, sizeof(Elf_Ehdr));
+	ramdisk_read((void *)elf, file, sizeof(Elf_Ehdr));
 	//int fd  = fs_open(filename, 0, 0);
 	//int ret = fs_read(fd, elf, sizeof(Elf_Ehdr));
 	//assert(ret != 0);
@@ -31,7 +32,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		//printf("lseek offset :%d\n", ls_offset);
 		//ret = fs_read(fd, elf_phdr, sizeof(Elf_Phdr));
 		//printf("read return valur: %d\n", ret);
-		ramdisk_read(elf_phdr, 400143+phdr_offset, sizeof(Elf_Phdr));
+		ramdisk_read(elf_phdr, file+phdr_offset, sizeof(Elf_Phdr));
 		if(elf_phdr->p_type == PT_LOAD) {
 			size_t offset = elf_phdr->p_offset;
 			uintptr_t vaddr = elf_phdr->p_vaddr;
@@ -42,7 +43,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 			//printf("phdr offset: %d\n", phdr_offset);
 			//printf("load file addr = 0x%x\n", vaddr);
 			//printf("load memsz :0x%x\n", memsz);
-			ramdisk_read((void *)vaddr, 400143+offset, memsz);
+			ramdisk_read((void *)vaddr, file+offset, memsz);
 			//ls_offset = fs_lseek(fd, offset, SEEK_SET);
 			//printf("ls_offset :%d\n", ls_offset);
 			//fs_read(fd, (void *)vaddr, memsz);
