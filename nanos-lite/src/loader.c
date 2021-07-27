@@ -15,18 +15,14 @@ extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
 	
-	printf("loader\n");
 	Elf_Ehdr ehdr;
 	Elf_Ehdr *elf = &ehdr;
 	//ramdisk_read((void *)elf, 0, sizeof(Elf_Ehdr));
-	int fd = fs_open(filename, 0, 0);
+	int fd  = fs_open(filename, 0, 0);
 	int ret = fs_read(fd, elf, sizeof(Elf_Ehdr));
 	assert(ret != 0);
 	assert(*(uint32_t *)elf->e_ident == 0x464c457f);
 	uint32_t phdr_offset = elf->e_phoff;
-	printf("fd: %d\n", fd);
-	printf("phdr_offset: 0x%x\n", phdr_offset);
-	printf("entry: 0x%x\n", elf->e_entry);
 	for(int i=0; i<elf->e_phnum; i++) {
 		Elf_Phdr phdr; 
 		Elf_Phdr *elf_phdr = &phdr;
