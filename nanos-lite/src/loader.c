@@ -23,6 +23,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	assert(*(uint32_t *)elf->e_ident == 0x464c457f);
 	printf("fd: %d\n", fd);
 	uint32_t phdr_offset = elf->e_phoff;
+	printf("phdr offset: %d\n", phdr_offset);
 	for(int i=0; i<elf->e_phnum; i++) {
 		Elf_Phdr phdr; 
 		Elf_Phdr *elf_phdr = &phdr;
