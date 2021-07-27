@@ -1,6 +1,11 @@
 #include <common.h>
 #include "syscall.h"
 #include <fs.h>
+#include <sys/time.h>
+
+#define RTC_ADDR 0xa1000048
+
+uint32_t inl(uintptr_t addr) { return *(volatile uint32_t *)addr; }
 
 int sys_yield() {
 	yield();
@@ -39,12 +44,20 @@ int sys_brk(void *addr) {
 	return 0;
 }
 
+int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
+	tv->tv_sec  =  inl(RTC_ADDR + 4);
+	tv->tv_usec =  inl(RTC_ADDR);
+	return 0;
+}
+
 void do_syscall(Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
-
+	a[1] = c->GPR2;
+	a[2] = c->GPR3;
+	a[4] = c->GPR4;
   switch (a[0]) {
-			case SYS_exit: 	c->GPRx = sys_exit(c->GPR2);  break; 
+			case SYS_exit: 	c->GPRx = sys_exit(a[1]);  break; 
 			case SYS_yield: c->GPRx = sys_yield(); break;
 			case SYS_write: c->GPRx = sys_write(c->GPR2, (void*)c->GPR3, c->GPR4); break;
 			case SYS_read:  c->GPRx = sys_read(c->GPR2, (void*)c->GPR3, c->GPR4); break;
@@ -52,6 +65,7 @@ void do_syscall(Context *c) {
 			case SYS_lseek: c->GPRx = sys_lseek(c->GPR2, c->GPR3, c->GPR4); break;
 			case SYS_close: c->GPRx = sys_close(c->GPR2); break;
 			case SYS_brk:   c->GPRx = sys_brk((void*)c->GPR2); break;
+			case SYS_gettimeofday: c->GPRx = sys_gettimeofday((struct timeval*)(a[1]), (struct timezone *)(a[2])); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }
