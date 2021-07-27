@@ -16,7 +16,8 @@ printf("timer-test\n");
  //uint32_t s = NDL_GetTicks();
  struct timeval time;
  //uint32_t t = s+1000;
- uint32_t sec = 0;
+ gettimeofday(&time, NULL);
+ uint32_t sec = time.tv_sec;
  while(1){
 		gettimeofday(&time, NULL);
 		/*
