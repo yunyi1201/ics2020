@@ -37,7 +37,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 			size_t filesz = elf_phdr->p_filesz;
 			size_t memsz = elf_phdr->p_memsz;
 			printf("file addr = 0x%x\n", vaddr);
-			ramdisk_read((void *)vaddr, offset, memsz);
+			//ramdisk_read((void *)vaddr, offset, memsz);
 			fs_lseek(fd, offset, SEEK_SET);
 			fs_read(fd, (void *)vaddr, memsz);
 			if(memsz > filesz) 
