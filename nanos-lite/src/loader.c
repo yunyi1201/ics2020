@@ -14,7 +14,7 @@ extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
 extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
-	
+/*	
 	Elf_Ehdr ehdr;
 	Elf_Ehdr *elf = &ehdr;
 	//ramdisk_read((void *)elf, 0, sizeof(Elf_Ehdr));
@@ -44,6 +44,42 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	}
 	fs_close(fd);
   return (uintptr_t)elf->e_entry;
+	*/
+	  /* Read the ehdr and phdr */
+  int fd = fs_open(filename, 0, 0);
+  // printf("filename: %s\nfd: %d\n", filename, fd);
+
+  Elf_Ehdr ehdr;
+  int ret = fs_read(fd, &ehdr, sizeof(Elf_Ehdr));
+	assert(ret != 0);
+
+  uint32_t phdr_offset = ehdr.e_phoff;
+
+  // go through all phdr's
+  for (int i = 0; i < ehdr.e_phnum; ++i) {
+    Elf_Phdr phdr;
+    fs_lseek(fd, phdr_offset, SEEK_SET);
+    fs_read(fd, &phdr, sizeof(Elf_Phdr));
+
+    /* Copy them into memory */
+    uint8_t *entry = (uint8_t *)phdr.p_vaddr;
+    size_t memsz   = phdr.p_memsz;
+    if (entry == NULL) break;
+
+    fs_lseek(fd, phdr.p_offset, SEEK_SET);
+    /* allocate new pages for programs */
+    //void *vaddr_i = entry;
+    //void *end     = entry + memsz;
+    //assert((uintptr_t)vaddr_i % PGSIZE == 0);
+   	fs_read(fd, entry, memsz); 
+    // printf("entry: 0x%x\n", (uintptr_t)entry);
+    // printf("&pcb->as set to %p\n", &pcb->as);
+
+    phdr_offset += sizeof(phdr);
+  }
+
+  fs_close(fd);
+  return ehdr.e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
