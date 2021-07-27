@@ -29,7 +29,8 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		Elf_Phdr *elf_phdr = &phdr;
 		size_t ls_offset = fs_lseek(fd, phdr_offset, SEEK_SET);
 		printf("lseek offset :%d\n", ls_offset);
-		fs_read(fd, elf_phdr, sizeof(Elf_Phdr));
+		ret = fs_read(fd, elf_phdr, sizeof(Elf_Phdr));
+		printf("read return valur: %d\n", ret);
 		//ramdisk_read(elf_phdr, 443927+phdr_offset, sizeof(Elf_Phdr));
 		if(elf_phdr->p_type == PT_LOAD) {
 			size_t offset = elf_phdr->p_offset;
