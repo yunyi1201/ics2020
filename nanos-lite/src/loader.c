@@ -21,6 +21,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	int ret = fs_read(fd, elf, sizeof(Elf_Ehdr));
 	assert(ret != 0);
 	assert(*(uint32_t *)elf->e_ident == 0x464c457f);
+	printf("fd: %d\n", fd);
 	uint32_t phdr_offset = elf->e_phoff;
 	for(int i=0; i<elf->e_phnum; i++) {
 		Elf_Phdr phdr; 
