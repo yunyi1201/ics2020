@@ -29,15 +29,15 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		Elf_Phdr *elf_phdr = &phdr;
 		//fs_lseek(fd, phdr_offset, SEEK_SET);
 		//fs_read(fd, elf_phdr, sizeof(Elf_Phdr));
-		printf("elf_phdr offset :0x%x\n", elf_phdr->p_offset);
-		printf("elf_phdr vaddr  :0x%x\n", elf_phdr->p_vaddr);
-		printf("phdr offset: %d\n", phdr_offset);
 		ramdisk_read(elf_phdr, 443927+phdr_offset, sizeof(Elf_Phdr));
 		if(elf_phdr->p_type == PT_LOAD) {
 			size_t offset = elf_phdr->p_offset;
 			uintptr_t vaddr = elf_phdr->p_vaddr;
 			size_t filesz = elf_phdr->p_filesz;
 			size_t memsz = elf_phdr->p_memsz;
+			printf("elf_phdr offset :0x%x\n", elf_phdr->p_offset);
+			printf("elf_phdr vaddr  :0x%x\n", elf_phdr->p_vaddr);
+			printf("phdr offset: %d\n", phdr_offset);
 			printf("load file addr = 0x%x\n", vaddr);
 			ramdisk_read((void *)vaddr, 443927+offset, memsz);
 			//fs_lseek(fd, offset, SEEK_SET);
