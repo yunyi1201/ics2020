@@ -46,7 +46,7 @@ size_t fb_write(const void *buf, size_t offset, size_t len) {
 	AM_GPU_CONFIG_T gpu = io_read(AM_GPU_CONFIG);
 	offset /= sizeof(uint32_t);
 	int x = offset % gpu.width;
-	int y = offset / gpu.height;
+	int y = offset / gpu.width;
 	int last = len / sizeof(uint32_t);
 	uint32_t* _buf = (uint32_t *)buf;
 	for(int i=y; last > 0; ++i) {
