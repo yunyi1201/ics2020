@@ -57,7 +57,7 @@ static inline long load_img() {
 
 static inline void parse_args(int argc, char *argv[]) {
   const struct option table[] = {
-    //{"batch"    , no_argument      , NULL, 'b'},
+    {"batch"    , no_argument      , NULL, 'b'},
     {"log"      , required_argument, NULL, 'l'},
     {"diff"     , required_argument, NULL, 'd'},
     {"port"     , required_argument, NULL, 'p'},
