@@ -1,7 +1,9 @@
 #include <am.h>
 #include <nemu.h>
+#include <klib.h>
 
 #define SYNC_ADDR (VGACTL_ADDR + 4)
+#define min(a, b) ((a) > (b) ? (b) : (a))
 
 static uint32_t GPU_H, GPU_W, VMEMSZ;
 void __am_gpu_init() {
@@ -22,30 +24,22 @@ void __am_gpu_config(AM_GPU_CONFIG_T *cfg) {
   };
 }
 
-static uint32_t __get_pixel_pos(int x, int y, int i, int j) {
-  /* Draw a graph from (x, y) -> (i, j)
-   * for __am_gpu_fbdraw */
-  x += j;
-  y += i;
-  return y * GPU_W + x;
-}
 
 void __am_gpu_fbdraw(AM_GPU_FBDRAW_T *ctl) {
 
 	int w = ctl->w, h = ctl->h;
-  int i, j;
-
-  // Map the [pixels] to [fb]
-  uint32_t *fb = (uint32_t *)(uintptr_t) FB_ADDR;
-  for (i = 0; i < h; ++i) {
-    for (j = 0; j < w; ++j) {
-      uint32_t col = *((uint32_t* ) (ctl->pixels) + (i * w + j));
-      *(fb + __get_pixel_pos(ctl->x, ctl->y, i, j)) = col;
-    }
-  }
+	int x = ctl->x, y = ctl->y;
+	uint32_t *pixels = ctl->pixels;
+	uint32_t *fb = (uint32_t *)(uintptr_t) FB_ADDR;	
+	int cp_bytes = sizeof(uint32_t)*min(w, GPU_W - x);
+	for(int i = 0; i < h && y+i < GPU_H; ++ i) {
+		memcpy(&fb[(y + i)*GPU_W + x], pixels, cp_bytes);
+		pixels += w;
+	}
   if (ctl->sync) {
     outl(SYNC_ADDR, 1);
   }
+
 }
 
 void __am_gpu_status(AM_GPU_STATUS_T *status) {
