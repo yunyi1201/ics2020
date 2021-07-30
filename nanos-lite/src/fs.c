@@ -22,7 +22,7 @@ typedef struct {
 	size_t open_offset;
 } Finfo;
 
-enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
+enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_EVENT, FD_PROC, FD_FB};
 
 size_t invalid_read(void *buf, size_t offset, size_t len) {
   panic("should not reach here");
@@ -39,9 +39,9 @@ static Finfo file_table[] __attribute__((used)) = {
   [FD_STDIN]  = {"stdin", 0, 0, invalid_read,  invalid_write, 0},
   [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write, 0},
   [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write, 0},
-	{"/dev/events", 0, 0, events_read, invalid_write, 0},
-	{"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write, 0},
-	{"/dev/fb",     0, 0,  invalid_read, fb_write, 0},
+	[FD_EVENT] = {"/dev/events", 0, 0, events_read, invalid_write, 0},
+	[FD_PROC]  = {"/proc/dispinfo", 0, 0, dispinfo_read, invalid_write, 0},
+	[FD_FB]   =  {"/dev/fb",     0, 0,  invalid_read, fb_write, 0},
 #include "files.h"
 };
 
