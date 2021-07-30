@@ -11,6 +11,7 @@
 static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
+static int canvas_w = 0, canvas_h = 0;
 
 static struct timeval boottime;
 
@@ -46,7 +47,12 @@ void NDL_OpenCanvas(int *w, int *h) {
   if (*w == 0 && *h == 0) {
     *w = screen_w;
     *h = screen_h;
-  }
+		canvas_w = screen_w;
+		canvas_h = screen_h;
+  } else {
+		canvas_w = *w;
+		canvas_h = *h;
+	}
   if (getenv("NWM_APP")) {
     int fbctl = 4;
     fbdev = 5;
@@ -69,8 +75,10 @@ void NDL_OpenCanvas(int *w, int *h) {
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
 	int fd = open("/dev/fb", O_WRONLY);
   int j;
+	int mid_x = (screen_w - canvas_w) / 2 + x;
+	int mid_y = (screen_h - canvas_h) / 2 + y;
   for (j = 0; j < h; ++j) {
-    lseek(fd, ((y + j) * screen_w + x) * sizeof(uint32_t), SEEK_SET);
+    lseek(fd, ((mid_y + j) * screen_w + x) * sizeof(uint32_t), SEEK_SET);
     write(fd, pixels + j * w, sizeof(uint32_t) * w);
   }
   close(fd);
