@@ -24,6 +24,7 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+	{"0[xX][0-9a-fA-F]+", TK_HEX },
 	{"[[:digit:]]+", TK_NUM},
 	{"-",  '-'},
 	{"\\+", '+' },
@@ -31,7 +32,6 @@ static struct rule {
 	{"/"  , '/' },
 	{"\\(", '(' },
 	{"\\)", ')' },
-	{"0[xX][0-9a-fA-F]+", TK_HEX },
 	{"\\$(([\\$rsgt]([0-9a-zA-Z])+)|(pc))", TK_REG},
 };
 
