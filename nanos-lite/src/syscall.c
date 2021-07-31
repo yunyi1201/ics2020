@@ -1,11 +1,14 @@
 #include <common.h>
 #include "syscall.h"
 #include <fs.h>
+#include <proc.h>
 #include <sys/time.h>
 
 #define RTC_ADDR 0xa1000048
 
 uint32_t inl(uintptr_t addr) { return *(volatile uint32_t *)addr; }
+
+extern void naive_uload(PCB * pcb, const char *filename);
 
 int sys_yield() {
 	yield();
@@ -13,7 +16,8 @@ int sys_yield() {
 }
 
 int sys_exit(int status) {
-	halt(0);
+	//halt(0);
+	naive_uload(NULL, "/bin/menu");
 	return status;
 }
 
@@ -41,6 +45,7 @@ int sys_close(int fd) {
 }
 
 int sys_brk(void *addr) {
+	// BUG 
 	return 0;
 }
 
@@ -48,6 +53,11 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 	tv->tv_sec  =  inl(RTC_ADDR + 4);
 	tv->tv_usec =  inl(RTC_ADDR);
 	return 0;
+}
+
+int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
+	naive_uload(NULL, fname);
+	return -1;
 }
 
 void do_syscall(Context *c) {
@@ -66,6 +76,7 @@ void do_syscall(Context *c) {
 			case SYS_close: c->GPRx = sys_close(c->GPR2); break;
 			case SYS_brk:   c->GPRx = sys_brk((void*)c->GPR2); break;
 			case SYS_gettimeofday: c->GPRx = sys_gettimeofday((struct timeval*)(a[1]), (struct timezone *)(a[2])); break;
+			case SYS_execve:  c->GPRx = sys_execve((const char *)(a[1]), NULL, NULL); // TODO: pass argv envp
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }
