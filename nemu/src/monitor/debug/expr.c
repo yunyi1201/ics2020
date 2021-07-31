@@ -31,7 +31,7 @@ static struct rule {
 	{"/"  , '/' },
 	{"\\(", '(' },
 	{"\\)", ')' },
-	{"[0-9a-fA-F]", TK_HEX },
+	{"0[xX][0-9a-fA-F]+", TK_HEX },
 	{"\\$(([\\$rsgt]([0-9a-zA-Z])+)|(pc))", TK_REG},
 };
 
