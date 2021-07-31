@@ -5,6 +5,8 @@
 
 char handle_key(SDL_Event *ev);
 
+char cmd_list[30][30];
+
 static void sh_printf(const char *format, ...) {
   static char buf[256] = {};
   va_list ap;
@@ -23,6 +25,22 @@ static void sh_prompt() {
 }
 
 static void sh_handle_cmd(const char *cmd) {
+	char *argv_list[30];
+  setenv("PATH", "/bin:/usr/bin", 0);
+  int cmd_cnt = 0;
+  while (*cmd && *cmd != '\n')
+  {
+    while(*cmd && *cmd == ' ')
+      cmd++;
+    sscanf(cmd, "%s", cmd_list[cmd_cnt]);
+    argv_list[cmd_cnt] = cmd_list[cmd_cnt];
+    cmd_cnt++;
+    while(*cmd && *cmd != ' ' && *cmd != '\n')
+      cmd++;
+  }
+  argv_list[cmd_cnt] = NULL;
+  int res = execvp(argv_list[0], argv_list);
+  printf("execvp result: %d", res);
 }
 
 void builtin_sh_run() {
