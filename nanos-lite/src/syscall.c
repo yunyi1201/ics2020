@@ -17,7 +17,7 @@ int sys_yield() {
 
 int sys_exit(int status) {
 	//halt(0);
-	naive_uload(NULL, "/bin/menu");
+	naive_uload(NULL, "/bin/nterm");
 	return status;
 }
 
