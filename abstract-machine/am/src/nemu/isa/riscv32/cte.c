@@ -18,7 +18,7 @@ Context* __am_irq_handle(Context *c) {
 			ev.event = EVENT_ERROR;
 		}
 
-    c = user_handler(ev, c);      // 切换进程
+  	user_handler(ev, c);      // 切换进程
     assert(c != NULL);
   }
 
