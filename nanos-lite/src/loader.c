@@ -43,6 +43,11 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   return (uintptr_t)elf->e_entry;
 }
 
+void context_kload(PCB *pcb, void *entry, void *arg) {
+	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
+	pcb->cp = kcontext(kstack, entry, arg);
+}
+
 void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
   Log("Jump to entry = %p", entry);

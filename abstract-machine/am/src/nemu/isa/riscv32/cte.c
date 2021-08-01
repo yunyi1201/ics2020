@@ -7,10 +7,6 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
-    //switch (c->cause) {
-		//	case  
-    //  default: ev.event = EVENT_ERROR; break;
-    //}
 		if(c->cause == -1) {
 			ev.event = EVENT_YIELD; 
 			c->epc += 4;
@@ -22,7 +18,7 @@ Context* __am_irq_handle(Context *c) {
 			ev.event = EVENT_ERROR;
 		}
 
-    c = user_handler(ev, c);
+    c = user_handler(ev, c);      // 切换进程
     assert(c != NULL);
   }
 
@@ -43,7 +39,14 @@ bool cte_init(Context*(*handler)(Event, Context*)) {
 }
 
 Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
-  return NULL;
+	Context* cp = (Context *)kstack.end - 1;
+	memset((void *)cp, 0, sizeof(Context));
+	cp->epc = (uintptr_t)entry;
+	cp->status = 0xc0100;
+	cp->gpr[8]  = (uintptr_t)kstack.end;
+	cp->gpr[2]  = (uintptr_t)cp;
+	// TODO: pass arg
+  return cp;
 }
 
 void yield() {
