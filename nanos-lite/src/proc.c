@@ -14,10 +14,10 @@ void switch_boot_pcb() {
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-		if(j % 1000000 == 0) {
+		if(j % 100000 == 0) {
     	Log("Hello World from Nanos-lite with arg '%s' for the %dth time!", (char *)arg, j);
-    	j ++;
 		}
+		j++;
     yield();
   }
 }
