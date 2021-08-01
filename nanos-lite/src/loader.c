@@ -17,7 +17,6 @@ extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
 static uintptr_t loader(PCB *pcb, const char *filename) {
 	Elf_Ehdr ehdr;
 	Elf_Ehdr *elf = &ehdr;
-	//ramdisk_read((void *)elf, file, sizeof(Elf_Ehdr));
 	int fd = fs_open(filename, 0, 0);
 	int ret = fs_read(fd, elf, sizeof(Elf_Ehdr));
 	assert(ret != 0);
@@ -27,12 +26,10 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		Elf_Phdr *elf_phdr = &phdr;
 		fs_lseek(fd, elf->e_phoff+ i*sizeof(Elf_Phdr) , SEEK_SET);
 		fs_read(fd, elf_phdr, sizeof(Elf_Phdr));
-		//ramdisk_read(elf_phdr, file+phdr_offset, sizeof(Elf_Phdr));
 		if(elf_phdr->p_type == PT_LOAD) {
 			uintptr_t vaddr = elf_phdr->p_vaddr;
 			size_t filesz = elf_phdr->p_filesz;
 			size_t memsz = elf_phdr->p_memsz;
-			//ramdisk_read((void *)vaddr, file+offset, memsz);
 			fs_lseek(fd, elf_phdr->p_offset, SEEK_SET);
 			fs_read(fd, (void *)vaddr, memsz);
 			if(memsz > filesz) 
@@ -46,6 +43,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 void context_kload(PCB *pcb, void *entry, void *arg) {
 	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
 	pcb->cp = kcontext(kstack, entry, arg);
+}
+
+void context_uload(PCB *pcb, const char *filename) {
+	uintptr_t entry = loader(pcb, filename);
+	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
+	pcb->cp = ucontext(NULL, kstack, (void *)entry);
+	pcb->cp->GPRx = (uintptr_t)heap.end;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
