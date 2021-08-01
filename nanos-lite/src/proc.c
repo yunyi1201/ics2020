@@ -28,9 +28,7 @@ void init_proc() {
 	//extern void naive_uload(PCB*, const char*);
   Log("Initializing processes...");
 	//naive_uload(NULL, "/bin/nterm");
-	yield();
   // load program here
-
 }
 
 
