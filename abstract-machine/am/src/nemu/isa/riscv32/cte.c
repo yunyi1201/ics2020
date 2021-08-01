@@ -45,7 +45,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 	cp->status = 0xc0100;
 	cp->gpr[8]  = (uintptr_t)kstack.end;
 	cp->gpr[2]  = (uintptr_t)kstack.end;
-	// TODO: pass arg
+	cp->GPR2 = (uintptr_t)arg;
   return cp;
 }
 
