@@ -24,7 +24,7 @@ void init_proc() {
 	
 	extern void context_kload(PCB *, void *, void *);
 	extern void context_uload(PCB *, const char *);
-	context_kload(&pcb[0], hello_fun, "A");
+	context_uload(&pcb[0], "/bin/menu");
 
 	context_uload(&pcb[1], "/bin/bird");
 
