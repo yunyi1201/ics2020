@@ -7,7 +7,6 @@ static Context* do_event(Event e, Context* c) {
  // }
 	if(e.event == EVENT_YIELD) {
 		c = schedule(c);
-		printf("Tirger yield event ID = %d\n", e.event);
 	}
 	else if(e.event == EVENT_SYSCALL) {
 		extern void do_syscall(Context*);

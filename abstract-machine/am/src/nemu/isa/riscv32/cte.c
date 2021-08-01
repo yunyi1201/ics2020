@@ -43,8 +43,8 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
 	memset((void *)cp, 0, sizeof(Context));
 	cp->epc = (uintptr_t)entry;
 	cp->status = 0xc0100;
-	cp->gpr[8]  = (uintptr_t)kstack.end;
-	cp->gpr[2]  = (uintptr_t)kstack.end;
+	//cp->gpr[8]  = (uintptr_t)kstack.end;
+	//cp->gpr[2]  = (uintptr_t)kstack.end;
 	cp->GPR2 = (uintptr_t)arg;
   return cp;
 }
