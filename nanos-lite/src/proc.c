@@ -25,9 +25,9 @@ void init_proc() {
 	extern void context_kload(PCB *, void *, void *);
 	context_kload(&pcb[0], hello_fun, NULL);
   switch_boot_pcb();
-	//extern void naive_uload(PCB*, const char*);
+	extern void naive_uload(PCB*, const char*);
   Log("Initializing processes...");
-	//naive_uload(NULL, "/bin/nterm");
+	naive_uload(NULL, "/bin/nterm");
   // load program here
 }
 
