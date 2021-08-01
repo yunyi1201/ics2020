@@ -22,13 +22,13 @@ void hello_fun(void *arg) {
 
 void init_proc() {
 	
-	extern void context_kload(PCB *, void *, void *);
-	context_kload(&pcb[0], hello_fun, "A");
-	context_kload(&pcb[1], hello_fun, "B");
-  switch_boot_pcb();
-	//extern void naive_uload(PCB*, const char*);
+	//extern void context_kload(PCB *, void *, void *);
+	//context_kload(&pcb[0], hello_fun, "A");
+	//context_kload(&pcb[1], hello_fun, "B");
+  //switch_boot_pcb();
+	extern void naive_uload(PCB*, const char*);
+	naive_uload(NULL, "/bin/dummy");
   Log("Initializing processes...");
-	//naive_uload(NULL, "/bin/nterm");
   // load program here
 }
 

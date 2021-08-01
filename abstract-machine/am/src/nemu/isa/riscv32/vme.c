@@ -69,5 +69,13 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
+	// TODO: user address
+	
+	Context *cp = (Context *)kstack.end - 1;
+	memset((void *)cp, 0, sizeof(Context));
+	cp->epc = (uintptr_t)entry;
+	cp->status = 0xc0100;
+	cp->gpr[8]  = (uintptr_t)kstack.end;
+	cp->gpr[2]  = (uintptr_t)kstack.end;
   return NULL;
 }
