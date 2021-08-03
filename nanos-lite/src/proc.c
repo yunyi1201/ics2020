@@ -25,6 +25,7 @@ void hello_fun(void *arg) {
 
 void init_proc() {
 	
+	Log("Start proc init");
 	extern void context_kload(PCB *, void *, void *);
 	extern void context_uload(PCB *, const char *, char *const argv[], char *const envp[]);
 	context_kload(&pcb[0], hello_fun, "A");
