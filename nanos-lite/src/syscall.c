@@ -9,6 +9,8 @@
 uint32_t inl(uintptr_t addr) { return *(volatile uint32_t *)addr; }
 
 extern void naive_uload(PCB * pcb, const char *filename);
+extern void context_uload(PCB *pcb, const char *fname, char *const argv[], char *const envp[]);
+
 
 int sys_yield() {
 	yield();
@@ -56,7 +58,8 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 }
 
 int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
-	naive_uload(NULL, fname);
+	PCB* pcb = find_free_pcb();
+	context_uload(pcb, fname, argv, envp);	
 	return -1;
 }
 
@@ -76,7 +79,7 @@ void do_syscall(Context *c) {
 			case SYS_close: c->GPRx = sys_close(c->GPR2); break;
 			case SYS_brk:   c->GPRx = sys_brk((void*)c->GPR2); break;
 			case SYS_gettimeofday: c->GPRx = sys_gettimeofday((struct timeval*)(a[1]), (struct timezone *)(a[2])); break;
-			case SYS_execve:  c->GPRx = sys_execve((const char *)(a[1]), NULL, NULL); // TODO: pass argv envp
+			case SYS_execve:  c->GPRx = sys_execve((const char *)(a[1]), (void *)(a[2]), NULL); // TODO: pass argv envp
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }

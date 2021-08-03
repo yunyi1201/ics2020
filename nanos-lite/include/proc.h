@@ -19,5 +19,6 @@ typedef union {
 extern PCB *current;
 
 Context* schedule(Context *prev);
+PCB* find_free_pcb();
 
 #endif

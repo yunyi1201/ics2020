@@ -2,8 +2,10 @@
 
 static void *pf = NULL;
 
-void* new_page(size_t nr_page) {
-  return NULL;
+void* new_page(size_t nr_page) {	
+	uint8_t *new = (uint8_t *)pf;
+	pf = (uint8_t *)pf + nr_page*4*PGSIZE;
+  return (void *)new;
 }
 
 static inline void* pg_alloc(int n) {

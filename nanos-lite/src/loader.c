@@ -10,6 +10,8 @@
 # define Elf_Phdr Elf32_Phdr
 #endif
 
+#define MAXARGS 8
+
 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
 extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
@@ -45,11 +47,25 @@ void context_kload(PCB *pcb, void *entry, void *arg) {
 	pcb->cp = kcontext(kstack, entry, arg);
 }
 
-void context_uload(PCB *pcb, const char *filename) {
+void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
+	uint32_t argc, ustack[MAXARGS], stackbase;
 	uintptr_t entry = loader(pcb, filename);
 	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
 	pcb->cp = ucontext(NULL, kstack, (void *)entry);
-	pcb->cp->GPRx = (uintptr_t)heap.end;
+	uint32_t sp = (uint32_t)new_page(8) + 8 * PGSIZE;
+	stackbase = sp - PGSIZE;
+	for(argc = 0; argv[argc]; argc++) {
+		assert(argc < MAXARGS);
+		sp -= strlen(argv[argc]) + 1;
+		assert(sp > stackbase);
+		memcpy((void *)sp, argv[argc], strlen(argv[argc]) + 1);
+		ustack[argc] = sp;
+	}
+	ustack[argc] = 0;
+	sp -= (argc + 1) * sizeof(uint32_t);
+	assert(sp > stackbase);
+	memcpy((void *)sp, (void *)ustack, (argc+1)*sizeof(uint32_t));
+	pcb->cp->GPRx = sp;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
