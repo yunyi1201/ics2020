@@ -11,6 +11,7 @@
 #endif
 
 #define MAXARGS 8
+#define MAXENVP 16
 
 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
@@ -48,12 +49,25 @@ void context_kload(PCB *pcb, void *entry, void *arg) {
 }
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
-	uint32_t argc, ustack[MAXARGS], stackbase;
+	uint32_t envc, argc, ustack[MAXARGS], stackbase, uenvp[MAXENVP];
 	uintptr_t entry = loader(pcb, filename);
 	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
 	pcb->cp = ucontext(NULL, kstack, (void *)entry);
 	uint32_t sp = (uint32_t)new_page(8) + 8 * PGSIZE;
 	stackbase = sp - PGSIZE;
+
+	for(envc = 0; envp[envc]; envc++) {
+		assert(envc < MAXENVP);
+		sp -= strlen(envp[envc]) + 1;
+		assert(sp > stackbase);
+		memcpy((void *)sp, envp[envc], strlen(envp[envc]) + 1);
+		uenvp[envc] = sp;
+	}
+	uenvp[envc] = 0;
+	sp -= (envc + 1) * sizeof(uint32_t);
+	assert(sp > stackbase);
+	memcpy((void *)sp, (void *)uenvp, (envc + 1)*sizeof(uint32_t));
+	
 	for(argc = 0; argv[argc]; argc++) {
 		assert(argc < MAXARGS);
 		sp -= strlen(argv[argc]) + 1;
