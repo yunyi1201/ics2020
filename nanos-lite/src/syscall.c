@@ -18,17 +18,12 @@ int sys_yield() {
 }
 
 int sys_exit(int status) {
-	halt(0);
-	//naive_uload(NULL, "/bin/nterm");
-	//PCB* pcb = find_free_pcb();
-	//context_uload(pcb, "/bin/nterm", "/bin/nterm", NULL);
+	//halt(0);
+	naive_uload(NULL, "/bin/nterm");
 	return status;
 }
 
 size_t sys_write(int fd, void* buf, size_t len) {
-
-	//Log("sys_write");
-	//Log("time: %s, %s", __TIME__, __DATE__);
 	return fs_write(fd, buf, len);
 }
 

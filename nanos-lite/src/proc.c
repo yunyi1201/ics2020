@@ -30,7 +30,7 @@ void init_proc() {
 	context_kload(&pcb[0], hello_fun, "A");
 
 	char *init_argv[8] = { "/bin/nterm" }; 
-	context_uload(&pcb[1], "/bin/nterm", init_argv, 0);
+	context_uload(&pcb[1], "/bin/exec-test", init_argv, 0);
 	
 
   switch_boot_pcb();
