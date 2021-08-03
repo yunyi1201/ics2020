@@ -65,6 +65,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 	sp -= (argc + 1) * sizeof(uint32_t);
 	assert(sp > stackbase);
 	memcpy((void *)sp, (void *)ustack, (argc+1)*sizeof(uint32_t));
+	sp -= sizeof(uint32_t);
+	memcpy((void *)sp, (void *)(&argc), sizeof(uint32_t));
 	pcb->cp->GPRx = sp;
 }
 
