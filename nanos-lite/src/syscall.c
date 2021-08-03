@@ -70,7 +70,7 @@ void do_syscall(Context *c) {
   a[0] = c->GPR1;
 	a[1] = c->GPR2;
 	a[2] = c->GPR3;
-	a[4] = c->GPR4;
+	a[3] = c->GPR4;
   switch (a[0]) {
 			case SYS_exit: 	c->GPRx = sys_exit(a[1]);  break; 
 			case SYS_yield: c->GPRx = sys_yield(); break;
@@ -81,7 +81,7 @@ void do_syscall(Context *c) {
 			case SYS_close: c->GPRx = sys_close(c->GPR2); break;
 			case SYS_brk:   c->GPRx = sys_brk((void*)c->GPR2); break;
 			case SYS_gettimeofday: c->GPRx = sys_gettimeofday((struct timeval*)(a[1]), (struct timezone *)(a[2])); break;
-			case SYS_execve:  c->GPRx = sys_execve((const char *)(a[1]), (void *)(a[2]), NULL); // TODO: pass argv envp
+			case SYS_execve:  c->GPRx = sys_execve((const char *)(a[1]), (void *)(a[2]), (void *)a[3]); // TODO: pass argv envp
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }
