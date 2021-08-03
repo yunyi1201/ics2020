@@ -29,7 +29,7 @@ void init_proc() {
 	extern void context_uload(PCB *, const char *, char *const argv[], char *const envp[]);
 	context_kload(&pcb[0], hello_fun, "A");
 
-	char *init_argv[8] = { "/bin/nterm" }; 
+	char *init_argv[5] = { "/bin/nterm", "123", "456", "789", NULL }; 
 	context_uload(&pcb[1], "/bin/exec-test", init_argv, 0);
 	
 
