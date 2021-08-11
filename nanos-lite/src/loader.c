@@ -53,7 +53,7 @@ void context_uload(PCB *pcb, const char *filename) {
 	uintptr_t entry = loader(pcb, filename);
 	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
 	pcb->cp = ucontext(NULL, kstack, (void *)entry);
-	sp = (uint32_t)heap.end;
+	sp = (uint32_t)heap.end - 1;
 	pcb->cp->GPRx = sp;
 }
 

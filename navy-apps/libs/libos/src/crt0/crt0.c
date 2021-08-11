@@ -8,6 +8,6 @@ extern char **environ;
 void call_main(uintptr_t *args) {
   char *empty[] =  {NULL };
   environ = empty;
-  exit(main(argc, argv, empty));
+  exit(main(0, empty, empty));
   assert(0);
 }
