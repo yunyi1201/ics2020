@@ -29,8 +29,8 @@ void init_proc() {
 	extern void context_uload(PCB *, const char *, char *const argv[], char *const envp[]);
 	context_kload(&pcb[0], hello_fun, "A");
 
-	//char *init_argv[5] = { "/bin/nterm", "123", "456", "789", NULL }; 
-	//context_uload(&pcb[1], "/bin/nterm", init_argv, NULL);
+	char *init_argv[5] = { "/bin/nterm", "123", "456", "789", NULL }; 
+	context_uload(&pcb[1], "/bin/nterm", init_argv, NULL);
 	
 
   switch_boot_pcb();
