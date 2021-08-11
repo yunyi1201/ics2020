@@ -48,7 +48,7 @@ void context_kload(PCB *pcb, void *entry, void *arg) {
 	pcb->cp = kcontext(kstack, entry, arg);
 }
 
-void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
+void context_uload(PCB *pcb, const char *filename) {
 	uint32_t sp;
 	uintptr_t entry = loader(pcb, filename);
 	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
