@@ -49,38 +49,11 @@ void context_kload(PCB *pcb, void *entry, void *arg) {
 }
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
-	uint32_t envc, argc, ustack[MAXARGS], stackbase, uenvp[MAXENVP];
+	uint32_t sp;
 	uintptr_t entry = loader(pcb, filename);
 	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
 	pcb->cp = ucontext(NULL, kstack, (void *)entry);
-	uint32_t sp = (uint32_t)new_page(8) + 8 * PGSIZE;
-	stackbase = sp - PGSIZE;
-
-	for(envc = 0; envp[envc]; envc++) {
-		assert(envc < MAXENVP);
-		sp -= strlen(envp[envc]) + 1;
-		assert(sp > stackbase);
-		memcpy((void *)sp, envp[envc], strlen(envp[envc]) + 1);
-		uenvp[envc] = sp;
-	}
-	uenvp[envc] = 0;
-	sp -= (envc + 1) * sizeof(uint32_t);
-	assert(sp > stackbase);
-	memcpy((void *)sp, (void *)uenvp, (envc + 1)*sizeof(uint32_t));
-	
-	for(argc = 0; argv[argc]; argc++) {
-		assert(argc < MAXARGS);
-		sp -= strlen(argv[argc]) + 1;
-		assert(sp > stackbase);
-		memcpy((void *)sp, argv[argc], strlen(argv[argc]) + 1);
-		ustack[argc] = sp;
-	}
-	ustack[argc] = 0;
-	sp -= (argc + 1) * sizeof(uint32_t);
-	assert(sp > stackbase);
-	memcpy((void *)sp, (void *)ustack, (argc+1)*sizeof(uint32_t));
-	sp -= sizeof(uint32_t);
-	memcpy((void *)sp, (void *)(&argc), sizeof(uint32_t));
+	sp = (uint32_t)heap.end;
 	pcb->cp->GPRx = sp;
 }
 
