@@ -25,11 +25,12 @@ void hello_fun(void *arg) {
 
 void init_proc() {
 
-	Log("Initializing processes start..");
-
 	extern void context_kload(PCB *, void *, void *);
 	extern void context_uload(PCB *, const char *, char *const argv[], char *const envp[]);
 	context_kload(&pcb[0], hello_fun, "A");
+
+	Log("Initializing context_uload...");
+
 	context_uload(&pcb[1], "/bin/nterm", 0, 0);
 
   switch_boot_pcb();
