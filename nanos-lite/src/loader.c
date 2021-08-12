@@ -60,6 +60,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 	sp = stackbase + 32 KB;
 
+	Log("sp = %p", (void *)stackbase);
+
 	sp -= 1 KB;
 	assert(sp > stackbase);
 
