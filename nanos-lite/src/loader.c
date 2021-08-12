@@ -55,6 +55,9 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 	uint32_t sp, stackbase, argc, ustack[MAXARGS], u_envp[MAXENVP], nr_envp;
 	
 	stackbase = (uint32_t)new_page(8);
+
+	Log("stackbase = %p", (void *)stackbase);
+
 	sp = stackbase + 32 KB;
 
 	sp -= 1 KB;
@@ -97,7 +100,6 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 	sp -= sizeof(uint32_t);
 	memcpy((void *)sp, (void *)&argc, sizeof(uint32_t));
 	
-	Log("user stack allocte");
 
 	uintptr_t entry = loader(pcb, filename);
 
