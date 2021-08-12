@@ -12,7 +12,6 @@
 
 #define MAXARGS 8
 #define MAXENVP 16
-#define KB      *1024
 
 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
@@ -59,7 +58,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 	Log("stackbase = %p", (void *)stackbase);
 
-	sp = stackbase + 32 * 1024;
+	sp = stackbase + 32 KB;
 
 	Log("sp = %p", (void *)sp);
 
