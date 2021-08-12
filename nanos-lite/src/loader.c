@@ -12,6 +12,7 @@
 
 #define MAXARGS 8
 #define MAXENVP 16
+#define KB      *1024
 
 
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
