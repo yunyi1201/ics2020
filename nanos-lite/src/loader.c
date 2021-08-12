@@ -48,12 +48,56 @@ void context_kload(PCB *pcb, void *entry, void *arg) {
 	pcb->cp = kcontext(kstack, entry, arg);
 }
 
-void context_uload(PCB *pcb, const char *filename) {
-	uint32_t sp;
+void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
+	uint32_t sp, stackbase, argc, ustack[MAXARGS], u_envp[MAXENVP], nr_envp;
+	
+	stackbase = (uint32_t)new_page(8);
+	sp = stackbase + 32 KB;
+
+	sp -= 1 KB;
+	assert(sp > stackbase);
+
+	for(nr_envp = 0; envp[nr_envp]; nr_envp++) {
+		assert(nr_envp < MAXENVP);
+		sp -= strlen(envp[nr_envp]) + 1;
+		sp -= sp % 16;
+		assert(sp > stackbase);
+		memcpy((void *)sp, (void *)(envp[nr_envp]), strlen(envp[nr_envp]) + 1);
+		u_envp[nr_envp] = sp;
+	}
+	u_envp[nr_envp] = 0;
+
+	for(argc = 0; argv[argc]; argc++) {
+		assert(argc < MAXARGS);
+		sp -= strlen(argv[argc]) + 1;
+		sp -= sp % 16;
+		assert(sp > stackbase);
+		memcpy((void *)sp, (void *)(argv[argc]), strlen(argv[argc]) + 1);
+		ustack[argc] = sp;
+	}
+	ustack[argc] = 0;
+
+
+	sp -= 1 KB;
+	assert(sp > stackbase);
+
+	sp -= (nr_envp + 1) * sizeof(uint32_t);
+	sp -= sp % 16;
+
+	assert(sp > stackbase);
+
+	memcpy((void *)sp, (void *)u_envp, sizeof(uint32_t) * (nr_envp + 1));
+
+	sp -= (argc + 1) * sizeof(uint32_t);
+	memcpy((void *)sp, (void *)ustack, sizeof(uint32_t) * (argc + 1));
+
+	sp -= sizeof(uint32_t);
+	memcpy((void *)sp, (void *)&argc, sizeof(uint32_t));
+
 	uintptr_t entry = loader(pcb, filename);
 	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
 	pcb->cp = ucontext(NULL, kstack, (void *)entry);
-	sp = (uint32_t)heap.end - 1;
+
 	pcb->cp->GPRx = sp;
 }
 

@@ -9,7 +9,7 @@
 uint32_t inl(uintptr_t addr) { return *(volatile uint32_t *)addr; }
 
 extern void naive_uload(PCB * pcb, const char *filename);
-extern void context_uload(PCB *pcb, const char *fname);
+extern void context_uload(PCB *pcb, const char *fname, char *const argv[], char *const envp[]);
 
 
 int sys_yield() {
@@ -56,7 +56,7 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 
 int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
 	PCB* pcb = find_free_pcb();
-	context_uload(pcb, fname);
+	context_uload(pcb, fname, argv, envp);
 	return -1;
 }
 
