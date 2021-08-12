@@ -49,6 +49,8 @@ void context_kload(PCB *pcb, void *entry, void *arg) {
 }
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
+
+	
 	uint32_t sp, stackbase, argc, ustack[MAXARGS], u_envp[MAXENVP], nr_envp;
 	
 	stackbase = (uint32_t)new_page(8);
@@ -93,6 +95,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 	sp -= sizeof(uint32_t);
 	memcpy((void *)sp, (void *)&argc, sizeof(uint32_t));
+
+	Log("Loader entry");
 
 	uintptr_t entry = loader(pcb, filename);
 
