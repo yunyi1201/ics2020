@@ -96,6 +96,8 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 	sp -= sizeof(uint32_t);
 	memcpy((void *)sp, (void *)&argc, sizeof(uint32_t));
+	
+	Log("user stack allocte");
 
 	uintptr_t entry = loader(pcb, filename);
 
