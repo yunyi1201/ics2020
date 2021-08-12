@@ -29,20 +29,19 @@ void init_proc() {
 	extern void context_uload(PCB *, const char *, char *const argv[], char *const envp[]);
 	context_kload(&pcb[0], hello_fun, "A");
 
-	Log("Initializing context_uload...");
+	extern void naive_uload(PCB*, const char *);
+	naive_uload(&pcb[1], "/bin/nterm");
 
-	context_uload(&pcb[1], "/bin/nterm", 0, 0);
+	//context_uload(&pcb[1], "/bin/nterm", 0, 0);
 
   switch_boot_pcb();
-	//extern void naive_uload(PCB*, const char*);
   Log("Initializing processes...");
-  // load program here
 }
 
 
 Context* schedule(Context *prev) {
 	current->cp = prev;
-	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+	current = (current == &pcb[0] ? &pcb[0] : &pcb[0]);
   return current->cp;
 }
 
