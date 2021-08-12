@@ -59,7 +59,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 
 	Log("stackbase = %p", (void *)stackbase);
 
-	sp = stackbase + 32 KB;
+	sp = stackbase + 32 * 1024;
 
 	Log("sp = %p", (void *)stackbase);
 
