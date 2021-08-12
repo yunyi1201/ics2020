@@ -32,7 +32,7 @@ void init_proc() {
 	//extern void naive_uload(PCB*, const char *);
 	//naive_uload(&pcb[1], "/bin/nterm");
 
-	context_uload(&pcb[1], "/bin/nterm", 0, 0);
+	context_uload(&pcb[1], "/bin/menu", 0, 0);
 
   switch_boot_pcb();
   Log("Initializing processes...");
@@ -41,7 +41,7 @@ void init_proc() {
 
 Context* schedule(Context *prev) {
 	current->cp = prev;
-	current = (current == &pcb[0] ? &pcb[0] : &pcb[0]);
+	current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
   return current->cp;
 }
 
