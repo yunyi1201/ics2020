@@ -30,7 +30,7 @@ void init_proc() {
 	context_kload(&pcb[0], hello_fun, "A");
 
 	char *environ[] ={NULL };
-	char *args[] = {NULL };
+	char *args[] = {"/bin/exec-test", "12", NULL };
 	context_uload(&pcb[1], "/bin/exec-test", args, environ);
 
   switch_boot_pcb();
