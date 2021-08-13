@@ -29,7 +29,9 @@ void init_proc() {
 	extern void context_uload(PCB *, const char *, char *const argv[], char *const envp[]);
 	context_kload(&pcb[0], hello_fun, "A");
 
-	context_uload(&pcb[1], "/bin/menu", NULL, NULL);
+	char *environ[] ={NULL };
+	char *args[] = {NULL };
+	context_uload(&pcb[1], "/bin/menu", args, environ);
 
   switch_boot_pcb();
   Log("Initializing processes...");
