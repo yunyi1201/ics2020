@@ -30,8 +30,8 @@ void init_proc() {
 	context_kload(&pcb[0], hello_fun, "A");
 
 	char *environ[] ={NULL };
-	char *args[] = {"/bin/exec-test", "12", NULL };
-	context_uload(&pcb[1], "/bin/exec-test", args, environ);
+	char *args[] = {"/bin/nterm", NULL };
+	context_uload(&pcb[1], "/bin/nterm", args, environ);
 
   switch_boot_pcb();
   Log("Initializing processes...");
