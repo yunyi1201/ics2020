@@ -20,11 +20,14 @@ int sys_yield() {
 
 int sys_exit(int status) {
 	//halt(0);
+	/*
 	PCB* pcb = find_free_pcb();
 	char *argv[] = {NULL };
 	char *environ[] = {NULL };
 
 	context_uload(pcb, "/bin/nterm", argv, environ);
+	*/
+	naive_uload(NULL, "/bin/nterm");
 	return status;
 }
 
