@@ -45,9 +45,12 @@ Context* schedule(Context *prev) {
 }
 
 PCB* find_free_pcb() {
+	/*
 	for(int i=0; i<MAX_NR_PROC; i++) {
 		if(pcb[i].cp != 0) 
 			return &pcb[i];
 	}
 	panic("Should not reach there");
+	*/
+	return &pcb[1];
 }
