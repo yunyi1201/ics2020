@@ -59,7 +59,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 	sp -= 1 KB;
 	assert(sp > stackbase);
 
-	for(nr_envp = 0; envp[nr_envp]; nr_envp++) {
+	for(nr_envp = 0; envp[nr_envp] != NULL; nr_envp++) {
 		assert(nr_envp < MAXENVP);
 		sp -= strlen(envp[nr_envp]) + 1;
 		sp -= sp % 16;
@@ -69,7 +69,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 	}
 	u_envp[nr_envp] = 0;
 
-	for(argc = 0; argv[argc]; argc++) {
+	for(argc = 0; argv[argc] != NULL; argc++) {
 		assert(argc < MAXARGS);
 		sp -= strlen(argv[argc]) + 1;
 		sp -= sp % 16;
