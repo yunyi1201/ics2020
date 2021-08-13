@@ -14,7 +14,7 @@ void switch_boot_pcb() {
 void hello_fun(void *arg) {
   int j = 1;
   while (1) {
-		if(j % 10000 == 0) {
+		if(j % 100000 == 0) {
     	Log("Hello World from Nanos-lite with arg '%s' for the %dth time!", (char *)arg, j);
 			j = 0;
 		}
@@ -31,7 +31,7 @@ void init_proc() {
 
 	char *environ[] ={NULL };
 	char *args[] = {NULL };
-	context_uload(&pcb[1], "/bin/nterm", args, environ);
+	context_uload(&pcb[1], "/bin/exec-test", args, environ);
 
   switch_boot_pcb();
   Log("Initializing processes...");
