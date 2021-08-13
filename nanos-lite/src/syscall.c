@@ -10,6 +10,7 @@ uint32_t inl(uintptr_t addr) { return *(volatile uint32_t *)addr; }
 
 extern void naive_uload(PCB * pcb, const char *filename);
 extern void context_uload(PCB *pcb, const char *fname, char *const argv[], char *const envp[]);
+extern void switch_boot_pcb();
 
 
 int sys_yield() {
@@ -19,7 +20,11 @@ int sys_yield() {
 
 int sys_exit(int status) {
 	//halt(0);
-	naive_uload(NULL, "/bin/nterm");
+	PCB* pcb = find_free_pcb();
+	char *argv[] = {NULL };
+	char *environ[] = {NULL };
+
+	context_uload(pcb, "/bin/nterm", argv, environ);
 	return status;
 }
 
@@ -57,6 +62,8 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
 	PCB* pcb = find_free_pcb();
 	context_uload(pcb, fname, argv, envp);
+	switch_boot_pcb();
+	yield();
 	return -1;
 }
 
