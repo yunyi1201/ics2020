@@ -98,6 +98,7 @@ void context_uload(PCB *pcb, const char *filename, char *const argv[], char *con
 	
 
 	uintptr_t entry = loader(pcb, filename);
+	Log("Jump to entry = %p", entry);
 
 	Area kstack = { (void *)pcb->stack, (void *)(pcb->stack + 1) };
 	pcb->cp = ucontext(NULL, kstack, (void *)entry);
