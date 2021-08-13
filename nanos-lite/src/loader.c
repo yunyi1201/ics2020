@@ -50,17 +50,11 @@ void context_kload(PCB *pcb, void *entry, void *arg) {
 
 void context_uload(PCB *pcb, const char *filename, char *const argv[], char *const envp[]) {
 
-	Log("context_uload start");
-
 	uint32_t sp, stackbase, argc, ustack[MAXARGS], u_envp[MAXENVP], nr_envp;
 	
 	stackbase = (uint32_t)new_page(8);
 
-	Log("stackbase = %p", (void *)stackbase);
-
 	sp = stackbase + 32 KB;
-
-	Log("sp = %p", (void *)sp);
 
 	sp -= 1 KB;
 	assert(sp > stackbase);
