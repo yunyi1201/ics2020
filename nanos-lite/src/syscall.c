@@ -20,12 +20,14 @@ int sys_yield() {
 
 int sys_exit(int status) {
 	//halt(0);
+	/*
 	PCB* pcb = find_free_pcb();
 	char *argv[] = {"/bin/nterm", NULL};
 	char *environ[] = {NULL };
 
 	context_uload(pcb, "/bin/nterm", argv, environ);
-	//naive_uload(NULL, "/bin/nterm");
+	*/
+	naive_uload(NULL, "/bin/nterm");
 	return status;
 }
 
@@ -61,6 +63,8 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 }
 
 int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
+	if(fs_open(fname, 0, 0) < 0)
+		return -2;
 	PCB* pcb = find_free_pcb();
 	context_uload(pcb, fname, argv, envp);
 	switch_boot_pcb();

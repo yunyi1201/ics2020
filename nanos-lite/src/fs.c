@@ -51,7 +51,10 @@ int fs_open(const char* filename, int flags, int mode) {
 	for(int i=3; i<F_NUM; i++) 
 		if(strcmp(filename, file_table[i].name) == 0) 
 			fd = i;
-	assert(fd != -1);
+	//assert(fd != -1);
+	if(fd == -1) {
+		return -1;             // error
+	}
 	file_table[fd].open_offset = 0;
 	return fd;
 }
