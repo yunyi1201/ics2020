@@ -12,57 +12,7 @@ extern void naive_uload(PCB * pcb, const char *filename);
 extern void context_uload(PCB *pcb, const char *fname, char *const argv[], char *const envp[]);
 extern void switch_boot_pcb();
 
-
-int sys_yield() {
-	yield();
-	return -1;
-}
-
-int sys_exit(int status) {
-	//halt(0);
-	/*
-	PCB* pcb = find_free_pcb();
-	char *argv[] = {"/bin/nterm", NULL};
-	char *environ[] = {NULL };
-
-	context_uload(pcb, "/bin/nterm", argv, environ);
-	*/
-	naive_uload(NULL, "/bin/nterm");
-	return status;
-}
-
-size_t sys_write(int fd, void* buf, size_t len) {
-	return fs_write(fd, buf, len);
-}
-
-size_t sys_read(int fd, void *buf, size_t len) {
-	return fs_read(fd, buf, len);
-}
-
-size_t sys_lseek(int fd, int offset, int whence) {
-	return fs_lseek(fd, offset, whence);
-}
-
-int sys_open(const char* filename, int flag, int mode) {
-	return fs_open(filename, flag, mode);
-}
-
-int sys_close(int fd) {
-	return fs_close(fd);
-}
-
-int sys_brk(void *addr) {
-	// BUG 
-	return 0;
-}
-
-int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
-	tv->tv_sec  =  inl(RTC_ADDR + 4);
-	tv->tv_usec =  inl(RTC_ADDR);
-	return 0;
-}
-
-int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
+static int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
 	if(fs_open(fname, 0, 0) < 0)
 		return -2;
 	PCB* pcb = find_free_pcb();
@@ -70,6 +20,53 @@ int sys_execve(const char *fname, char * const argv[], char *const envp[]) {
 	switch_boot_pcb();
 	yield();
 	return -1;
+}
+
+
+static int sys_yield() {
+	yield();
+	return -1;
+}
+
+static int sys_exit(int status) {
+	//halt(0);
+	//PCB* pcb = find_free_pcb();
+	char *argv[] = {"/bin/nterm", NULL};
+	char *environ[] = {NULL };
+	//context_uload(pcb, "/bin/nterm", argv, environ);
+	sys_execve("/bin/nterm", argv, environ);
+	return status;
+}
+
+static size_t sys_write(int fd, void* buf, size_t len) {
+	return fs_write(fd, buf, len);
+}
+
+static size_t sys_read(int fd, void *buf, size_t len) {
+	return fs_read(fd, buf, len);
+}
+
+static size_t sys_lseek(int fd, int offset, int whence) {
+	return fs_lseek(fd, offset, whence);
+}
+
+static int sys_open(const char* filename, int flag, int mode) {
+	return fs_open(filename, flag, mode);
+}
+
+static int sys_close(int fd) {
+	return fs_close(fd);
+}
+
+static int sys_brk(void *addr) {
+	// BUG 
+	return 0;
+}
+
+static int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
+	tv->tv_sec  =  inl(RTC_ADDR + 4);
+	tv->tv_usec =  inl(RTC_ADDR);
+	return 0;
 }
 
 void do_syscall(Context *c) {
